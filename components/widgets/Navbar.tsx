@@ -74,7 +74,7 @@ export default function Navbar() {
             pointerEvents: "auto",
           }}
         >
-          {/* Logo Capsule (56px x 56px exact Conicorn size) */}
+          {/* Left Circle Button with Deepak Gupta's DG Monogram Logo */}
           <Box
             component="a"
             href="#hero"
@@ -83,9 +83,9 @@ export default function Navbar() {
               handleScrollTo("#hero");
             }}
             sx={{
-              width: { xs: 48, md: 56 },
-              height: { xs: 48, md: 56 },
-              borderRadius: "999px",
+              width: { xs: 52, md: 64 },
+              height: { xs: 52, md: 64 },
+              borderRadius: "50%",
               bgcolor: "rgba(26, 26, 26, 0.75)",
               border: `1px solid ${Colors.BORDER}`,
               backdropFilter: "blur(40px)",
@@ -97,31 +97,34 @@ export default function Navbar() {
               transition: "all 0.25s ease-in-out",
               boxShadow: "0 10px 35px rgba(0, 0, 0, 0.4)",
               "&:hover": {
-                transform: "scale(1.04)",
+                transform: "scale(1.06)",
                 borderColor: Colors.TEXT_SECONDARY,
                 bgcolor: Colors.SURFACE_CARD,
               },
             }}
-            aria-label="Home"
+            aria-label="Deepak Gupta"
           >
-            <Typography
+            <Box
+              component="img"
+              src="/LogoNav.png"
+              alt="Deepak Gupta"
               sx={{
-                fontSize: { xs: "16px", md: "18px" },
-                fontWeight: 700,
-                color: Colors.WHITE,
-                fontFamily: "var(--font-outfit), var(--font-geist-sans), sans-serif",
-                letterSpacing: "0.5px",
+                width: { xs: 44, md: 54 },
+                height: "auto",
+                maxHeight: { xs: 34, md: 42 },
+                objectFit: "contain",
                 userSelect: "none",
+                pointerEvents: "none",
+                display: "block",
+                filter: "drop-shadow(0 2px 10px rgba(0, 0, 0, 0.6))",
               }}
-            >
-              DG
-            </Typography>
+            />
           </Box>
 
-          {/* Nav Actions Capsule (56px height, exact Conicorn dimensions) */}
+          {/* Exact Conicorn Nav Actions Capsule (Balanced 64px height) */}
           <Box
             sx={{
-              height: { xs: 48, md: 56 },
+              height: { xs: 52, md: 64 },
               borderRadius: "999px",
               bgcolor: "rgba(26, 26, 26, 0.75)",
               border: `1px solid ${Colors.BORDER}`,
@@ -129,8 +132,8 @@ export default function Navbar() {
               WebkitBackdropFilter: "blur(40px)",
               display: "flex",
               alignItems: "center",
-              pl: { xs: 1.5, md: 2.5 },
-              pr: { xs: 0.5, md: "4px" },
+              pl: { xs: 1.8, md: 2.8 },
+              pr: { xs: 0.6, md: "5px" },
               gap: { xs: 1.5, md: 3 }, // 24px gap between menu & CTA
               boxShadow: "0 10px 35px rgba(0, 0, 0, 0.4)",
             }}
@@ -222,15 +225,15 @@ export default function Navbar() {
               </Typography>
             </Box>
 
-            {/* CTA Pill Button (Exact 48px height, generous padding) */}
+            {/* CTA Pill Button (54px height to match 64px capsule) */}
             <Button
               onClick={() => handleScrollTo("#contact")}
               sx={{
-                height: { xs: 40, md: 48 },
+                height: { xs: 42, md: 54 },
                 bgcolor: Colors.WHITE,
                 color: Colors.SURFACE_CARD,
                 borderRadius: "999px",
-                px: { xs: 2.2, md: 2.8 },
+                px: { xs: 2.2, md: 3 },
                 py: 0,
                 fontSize: { xs: "14px", md: "16px" },
                 fontWeight: 600,

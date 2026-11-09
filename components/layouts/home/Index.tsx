@@ -5,10 +5,20 @@ import HeroSection from "./HeroSection";
 
 export default function HomeLayout() {
   return (
-    <Box component="main" sx={{ minHeight: "100vh", position: "relative" }}>
+    <Box
+      component="main"
+      sx={{
+        minHeight: "100vh",
+        position: "relative",
+        overflowX: "hidden",
+        bgcolor: "#FAFBFD",
+      }}
+    >
+      {/* Floating Island Navbar */}
       <Navbar />
+
+      {/* Hero Section: Left Intro + Right Interactive 3D Ball */}
       <HeroSection />
     </Box>
   );
 }
-
