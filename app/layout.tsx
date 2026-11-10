@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { commissionerFont, OutfitFont, Caratere } from "@/utils/font";
 import "./globals.css";
-
+///jhdfghj
 export const metadata: Metadata = {
   title: "Deepak Gupta | Senior Accountant & Financial Specialist",
   description:
