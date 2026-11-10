@@ -154,67 +154,22 @@ export default function ConstellationField({
 
       const n = nodes.length;
 
-      // 1. Path batching arrays to replace 500+ draw calls with 3 single-pass strokes
-      const faintPaths: [number, number, number, number][] = [];
-      const midPaths: [number, number, number, number][] = [];
-      const strongPaths: [number, number, number, number][] = [];
-
+      // 1. Zero-allocation single-pass batch rendering (eliminates GC stutter)
+      ctx.globalAlpha = Math.min(1, 0.22 * opacity);
+      ctx.beginPath();
       for (let i = 0; i < n; i++) {
         const ni = nodes[i];
         for (let j = i + 1; j < n; j++) {
           const nj = nodes[j];
           const dx = ni.x - nj.x;
           const dy = ni.y - nj.y;
-          const distSq = dx * dx + dy * dy;
-
-          if (distSq < linkDistSq) {
-            const ratio = distSq / linkDistSq; // 0 (very close) to 1 (at link boundary)
-            if (ratio > 0.55) {
-              faintPaths.push([ni.x, ni.y, nj.x, nj.y]);
-            } else if (ratio > 0.22) {
-              midPaths.push([ni.x, ni.y, nj.x, nj.y]);
-            } else {
-              strongPaths.push([ni.x, ni.y, nj.x, nj.y]);
-            }
+          if (dx * dx + dy * dy < linkDistSq) {
+            ctx.moveTo(ni.x, ni.y);
+            ctx.lineTo(nj.x, nj.y);
           }
         }
       }
-
-      // Draw Bucket 0 (Faint links)
-      if (faintPaths.length > 0) {
-        ctx.globalAlpha = Math.min(1, 0.12 * opacity);
-        ctx.beginPath();
-        for (let k = 0; k < faintPaths.length; k++) {
-          const p = faintPaths[k];
-          ctx.moveTo(p[0], p[1]);
-          ctx.lineTo(p[2], p[3]);
-        }
-        ctx.stroke();
-      }
-
-      // Draw Bucket 1 (Mid-distance links)
-      if (midPaths.length > 0) {
-        ctx.globalAlpha = Math.min(1, 0.25 * opacity);
-        ctx.beginPath();
-        for (let k = 0; k < midPaths.length; k++) {
-          const p = midPaths[k];
-          ctx.moveTo(p[0], p[1]);
-          ctx.lineTo(p[2], p[3]);
-        }
-        ctx.stroke();
-      }
-
-      // Draw Bucket 2 (Close strong links)
-      if (strongPaths.length > 0) {
-        ctx.globalAlpha = Math.min(1, 0.42 * opacity);
-        ctx.beginPath();
-        for (let k = 0; k < strongPaths.length; k++) {
-          const p = strongPaths[k];
-          ctx.moveTo(p[0], p[1]);
-          ctx.lineTo(p[2], p[3]);
-        }
-        ctx.stroke();
-      }
+      ctx.stroke();
 
       // 2. Update node positions with smooth dt
       const gravityRadius = 220;

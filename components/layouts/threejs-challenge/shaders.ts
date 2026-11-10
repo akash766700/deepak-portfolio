@@ -3,6 +3,7 @@
 export const AX_VERTEX_SHADER = `
 attribute vec3 a_instancePos;
 attribute vec4 a_instanceQuaternions;
+attribute vec3 a_instanceColor;
 
 #ifdef IS_DEPTH
     varying vec2 vHighPrecisionZW;
@@ -10,6 +11,7 @@ attribute vec4 a_instanceQuaternions;
     varying vec3 v_worldPosition;
     varying vec2 v_uv;
     varying vec3 v_instancePos;
+    varying vec3 v_instanceColor;
     varying vec3 v_viewPosition;
     varying vec3 v_viewNormal;
     varying vec3 v_modelPosition;
@@ -97,6 +99,7 @@ void main() {
         v_modelPosition = position;
         v_viewPosition = -viewPosition.xyz;
         v_instancePos = a_instancePos;
+        v_instanceColor = a_instanceColor;
         v_worldNormal = inverseTransformDirection(v_viewNormal, viewMatrix);
 
         vDirectionalShadowCoord[0] = directionalShadowMatrix[0] * worldPosition + vec4(v_worldNormal * directionalLightShadows[0].shadowNormalBias, 0. );
@@ -108,6 +111,7 @@ export const INSTANCED_FRAGMENT_SHADER = `
 varying vec3 v_worldPosition;
 varying vec2 v_uv;
 varying vec3 v_instancePos;
+varying vec3 v_instanceColor;
 varying vec3 v_instanceRands;
 varying vec3 v_viewPosition;
 varying vec3 v_viewNormal;
@@ -170,23 +174,15 @@ float getShadow( sampler2D shadowMap, vec2 shadowMapSize, float shadowBias, floa
 
         shadow = (
             texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx0, dy0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy0 ), shadowCoord.z ) +
             texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, dy0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx2, dy2 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy2 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx3, dy2 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx0, 0.0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx2, 0.0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy, shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx3, 0.0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, 0.0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx2, dy3 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy3 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx3, dy3 ), shadowCoord.z ) +
             texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx0, dy1 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy1 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, dy1 ), shadowCoord.z )
-        ) * ( 1.0 / 17.0 );
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, dy1 ), shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy, shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx2, 0.0 ), shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx3, 0.0 ), shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy2 ), shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy3 ), shadowCoord.z )
+        ) * ( 1.0 / 9.0 );
     }
 
     return shadow;
@@ -213,16 +209,26 @@ void main() {
     float distFromLight = length(u_lightPosition - v_worldPosition);
     float attenuation = clamp(1.0 / (0.00025 * pow(distFromLight, 8.0)), 0.0, 1.5);
 
-    // Studio ambient occlusion for realistic depth between capsules
+    // Studio ambient occlusion for realistic depth between capsules (subtle and brightened to prevent dark cast)
     float ao = linearStep(-0.5, -2.8, v_modelPosition.y);
-    float aoFactor = mix(0.65, 1.0, ao);
+    float aoFactor = mix(0.92, 1.0, ao);
 
+    // Light, subtle shadow mask so the sphere never turns black on one side
     float shadow = getShadowMask();
-    shadow = 0.68 + 0.32 * shadow;
+    shadow = 0.90 + 0.10 * shadow;
     
-    // Soft studio wrap-around lighting: high-key crisp white studio definition
-    float wrapLight = clamp(NdL * 0.22 + 0.78 + attenuation * 0.15, 0.0, 1.0);
-    vec3 color = u_color * wrapLight * aoFactor * shadow;
+    // Soft high-key studio wrap-around lighting: luminous crisp white all around
+    float wrapLight = clamp(NdL * 0.08 + 0.92 + attenuation * 0.06, 0.0, 1.0);
+    vec3 baseColor = v_instanceColor * u_color;
+    vec3 color = baseColor * wrapLight * aoFactor * shadow;
+
+    // Rich metallic highlight for the accent gold dots (heading gradient colors)
+    if (v_instanceColor.b < 0.8) {
+        vec3 V = normalize(-v_viewPosition);
+        vec3 H = normalize(L + V);
+        float spec = pow(max(0.0, dot(N, H)), 24.0);
+        color += spec * 0.45 * vec3(1.0, 0.80, 0.30);
+    }
 
     gl_FragColor = vec4(color, 1.0);
 }
@@ -413,33 +419,16 @@ float getShadowMask() {
 void main() {
     vec3 viewNormal = normalize(v_viewNormal);
 
-    vec3 N = inverseTransformDirection(viewNormal, viewMatrix); // normal in world space
-    vec3 V = normalize(cameraPosition - v_worldPosition); // view direction
-    vec3 L = u_lightPosition - v_worldPosition; // light direction
+    vec3 N = inverseTransformDirection(viewNormal, viewMatrix);
+    vec3 V = normalize(cameraPosition - v_worldPosition);
+    vec3 L = u_lightPosition - v_worldPosition;
     float lightDistance = length(L);
     L /= lightDistance;
 
-    float NdL = max(0., dot(N, L));
     vec3 H = normalize(V + L);
     float spec = max(0.0, dot(H, N));
     float NdV = max(0., dot(N, V));
-    float fresnel = pow(1.0 - NdV, 5.0);
-    
-    float thickness = 0.6;
-    float ior = 1.45; // ice ior
-    float refractionRatio = 1.0 / ior;
-    vec3 refractionVector = refract( -V, N, refractionRatio );
-    
-    vec3 transmissionRay = normalize( refractionVector ) * thickness;
-    vec3 refractedRayExit = v_worldPosition + transmissionRay;
-    
-    vec4 ndcPos = projectionMatrix * viewMatrix * vec4( refractedRayExit, 1.0 );
-    vec2 refractionCoords = ndcPos.xy / ndcPos.w;
-    refractionCoords += 1.0;
-    refractionCoords /= 2.0;
-    refractionCoords = clamp(refractionCoords, 0.002, 0.998);
-    
-    vec3 sceneColor = texture2D(u_sceneTexture, refractionCoords).rgb;
+    float fresnel = pow(1.0 - NdV, 4.0);
 
     vec3 viewDir = normalize( v_viewPosition );
     vec3 x = normalize( vec3( viewDir.z, 0.0, - viewDir.x ) );
@@ -449,12 +438,25 @@ void main() {
     
     float shadow = getShadowMask();
     
-    // Crystal clear refractive glass with specular top-rim highlight
-    vec3 glassBase = mix(vec3(0.68, 0.70, 0.72), sceneColor, 0.85);
-    vec3 color = glassBase;
-    color += shadow * 0.45 * pow(spec, 60.0);
-    color += (0.2 + 0.8 * shadow) * 0.35 * matcapColor.rgb;
-    color += shadow * 0.20 * fresnel;
+    // Studio Chrome/Glass with subtle 5% golden touch (Lifted brightness to eliminate dark black cast)
+    float glassDepth = mix(0.36, 0.64, pow(NdV, 1.2));
+    vec3 color = vec3(glassDepth);
+    
+    // Monochromatic Studio Matcap Reflection (Glossy studio curvature)
+    float matcapBW = dot(matcapColor.rgb, vec3(0.299, 0.587, 0.114));
+    color += vec3(matcapBW) * 0.72;
+    
+    // High-contrast specular highlight from studio light
+    color += shadow * 0.95 * pow(spec, 32.0) * vec3(1.0);
+    
+    // Crisp fresnel rim
+    color += fresnel * 0.80 * vec3(1.0);
+    
+    // Ambient shadow modulation (lifted to prevent dark muddy black)
+    color *= (0.80 + 0.20 * shadow);
+
+    // Subtle 5% Luxury Warm Golden Touch (Champagne Gold Chrome)
+    color *= vec3(1.05, 0.98, 0.86);
 
     gl_FragColor = vec4(color, 1.0);
 }
@@ -560,23 +562,15 @@ float getShadow( sampler2D shadowMap, vec2 shadowMapSize, float shadowBias, floa
 
         shadow = (
             texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx0, dy0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy0 ), shadowCoord.z ) +
             texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, dy0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx2, dy2 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy2 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx3, dy2 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx0, 0.0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx2, 0.0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy, shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx3, 0.0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, 0.0 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx2, dy3 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy3 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx3, dy3 ), shadowCoord.z ) +
             texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx0, dy1 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy1 ), shadowCoord.z ) +
-            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, dy1 ), shadowCoord.z )
-        ) * ( 1.0 / 17.0 );
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx1, dy1 ), shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy, shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx2, 0.0 ), shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( dx3, 0.0 ), shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy2 ), shadowCoord.z ) +
+            texture2DCompare( shadowMap, shadowCoord.xy + vec2( 0.0, dy3 ), shadowCoord.z )
+        ) * ( 1.0 / 9.0 );
     }
 
     return shadow;
@@ -590,8 +584,7 @@ float getShadowMask() {
     float shadow = 1.0;
     vec3 blueNoise = getBlueNoise(gl_FragCoord.xy);
     DirectionalLightShadow directionalLight = directionalLightShadows[0];
-    shadow *= 0.75 + 0.25 * getShadow( directionalShadowMap[0], directionalLight.shadowMapSize, directionalLight.shadowBias - blueNoise.z * 0.001, directionalLight.shadowRadius, vDirectionalShadowCoord[0] + vec4(1.5 * blueNoise.xy / directionalLight.shadowMapSize, 0.0, 0.0));
-    shadow *= getShadow( directionalShadowMap[0], directionalLight.shadowMapSize, directionalLight.shadowBias - blueNoise.z * 0.002, directionalLight.shadowRadius, vDirectionalShadowCoord[0] + vec4(2.0 * blueNoise.xy / directionalLight.shadowMapSize, 0.0, 0.0));
+    shadow *= getShadow( directionalShadowMap[0], directionalLight.shadowMapSize, directionalLight.shadowBias - blueNoise.z * 0.001, directionalLight.shadowRadius, vDirectionalShadowCoord[0] + vec4(blueNoise.xy / directionalLight.shadowMapSize, 0.0, 0.0));
     return shadow;
 }
 

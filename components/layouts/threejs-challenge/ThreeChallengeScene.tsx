@@ -45,7 +45,7 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
       alpha: true,
     });
     renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(width, height);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.BasicShadowMap;
@@ -58,10 +58,13 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
     // --- 2. OrbitControls ---
     const controls = new OrbitControls(camera, canvas);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
+    controls.dampingFactor = 0.12;
+    controls.rotateSpeed = 1.0;
     controls.enableZoom = false; // Zoom in / zoom out disabled: ball stays fixed in scale
     controls.enablePan = false;  // Pan disabled: ball stays anchored
     controls.enableRotate = true;// Drag/swipe to rotate the ball
+    controls.autoRotate = true;  // Big ball rotates smoothly and steadily
+    controls.autoRotateSpeed = 1.5; // Ambient rotation speed adjusted to 1.5 as requested
 
     // --- 3. Textures (Exact reference assets) ---
     const textureLoader = new THREE.TextureLoader();
@@ -78,8 +81,8 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
     directionalLight.position.copy(lightDir);
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
     directionalLight.shadow.bias = -0.0002;
     directionalLight.shadow.normalBias = 0.02;
     directionalLight.shadow.camera.near = 0.1;
@@ -105,7 +108,7 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
         u_noiseTexelSize: { value: new THREE.Vector2(1 / 128, 1 / 128) },
         u_noiseCoordOffset: { value: new THREE.Vector2(0, 0) },
         u_color: {
-          value: new THREE.Color().setRGB(250 / 255, 252 / 255, 255 / 255, THREE.LinearSRGBColorSpace),
+          value: new THREE.Color().setRGB(1.0, 1.0, 1.0, THREE.LinearSRGBColorSpace),
         },
         u_sphere1Position: { value: sphere1Pos },
         u_sphere2Position: { value: sphere2Pos },
@@ -120,8 +123,8 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
     // scene.add(bgMesh);
 
     // --- 6. Central Core Sphere ---
-    const coreGeo = new THREE.SphereGeometry(1.5, 64, 64);
-    const coreMat = new THREE.MeshBasicMaterial({ color: "#25282E" });
+    const coreGeo = new THREE.SphereGeometry(1.5, 32, 32);
+    const coreMat = new THREE.MeshBasicMaterial({ color: "#E2E8F0" });
     const coreMesh = new THREE.Mesh(coreGeo, coreMat);
     coreMesh.renderOrder = -1;
     scene.add(coreMesh);
@@ -144,7 +147,7 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
 
     // --- 8. 3000 Fibonacci Instanced Capsules ---
     const Mx = 3000;
-    const baseCapsuleGeo = new THREE.CapsuleGeometry(1, 4, 8, 32);
+    const baseCapsuleGeo = new THREE.CapsuleGeometry(1, 4, 4, 16);
     baseCapsuleGeo.computeBoundingBox();
 
     const instancedGeo = new THREE.InstancedBufferGeometry();
@@ -158,6 +161,25 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
 
     const posArray = new Float32Array(Mx * 3);
     const quatArray = new Float32Array(Mx * 4);
+    const colorArray = new Float32Array(Mx * 3);
+    colorArray.fill(1.0); // Default all capsules to crisp white (1, 1, 1)
+
+    // 11 Golden accent dots using the heading gradient colors (#D97706, #F59E0B, #FFB330)
+    const goldGradientPalette = [
+      [1.0, 0.702, 0.188],  // #FFB330 (Saffron Highlight)
+      [0.961, 0.620, 0.043], // #F59E0B (Vibrant 24K Gold)
+      [0.851, 0.467, 0.024], // #D97706 (Rich Amber Gold)
+    ];
+
+    const goldDotIndices = [240, 580, 890, 1180, 1420, 1650, 1920, 2180, 2450, 2680, 2850];
+    goldDotIndices.forEach((idx, i) => {
+      const c = idx * 3;
+      const col = goldGradientPalette[i % goldGradientPalette.length];
+      colorArray[c] = col[0];
+      colorArray[c + 1] = col[1];
+      colorArray[c + 2] = col[2];
+    });
+
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
     const upVector = new THREE.Vector3(0, 1, 0);
     const sVec = new THREE.Vector3();
@@ -183,6 +205,7 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
 
     instancedGeo.setAttribute("a_instancePos", new THREE.InstancedBufferAttribute(posArray, 3));
     instancedGeo.setAttribute("a_instanceQuaternions", new THREE.InstancedBufferAttribute(quatArray, 4));
+    instancedGeo.setAttribute("a_instanceColor", new THREE.InstancedBufferAttribute(colorArray, 3));
 
     const instancedMat = new THREE.ShaderMaterial({
       vertexShader: AX_VERTEX_SHADER,
@@ -206,15 +229,13 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
     scene.add(instancedMesh);
 
     // --- 9. 4 Orbiting Glass Spheres ---
-    const orbGeo = new THREE.SphereGeometry(0.3, 64, 64);
+    const orbGeo = new THREE.SphereGeometry(0.3, 32, 32);
 
     const glassUniforms = THREE.UniformsUtils.merge([
       THREE.UniformsLib.lights,
       {
         u_lightPosition: { value: lightDir },
         u_noiseTexture: { value: bnoiseTexture },
-        u_sceneTexture: { value: null },
-        u_resolution: { value: new THREE.Vector2(width, height) },
         u_matcap: { value: glassMatcapTexture },
         u_noiseTexelSize: { value: new THREE.Vector2(1 / 128, 1 / 128) },
         u_noiseCoordOffset: { value: new THREE.Vector2(0, 0) },
@@ -242,35 +263,51 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
     orbsGroup.add(orb1, orb2, orb3, orb4);
     scene.add(orbsGroup);
 
-    // --- 10. Refraction Render Target for Scene Texture ---
-    const halfWidth = Math.floor(width / 2);
-    const halfHeight = Math.floor(height / 2);
-    const sceneRenderTarget = new THREE.WebGLRenderTarget(halfWidth, halfHeight, {
-      depthBuffer: true,
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-    });
-    glassUniforms.u_sceneTexture.value = sceneRenderTarget.texture;
-
-    // --- 11. Orbit Paths Calculation ---
-    const orbits = [
-      { speed: 1.0, phase: Math.PI / 1.1, plane: "yz", dir: 1 },
-      { speed: 0.75, phase: Math.PI / 3.4, plane: "xz", dir: -1 },
-      { speed: 0.5, phase: Math.PI / 2.2, plane: "yz", dir: 1 },
-      { speed: 1.2, phase: Math.PI / 1.7, plane: "xy", dir: -1 },
+    // --- 10. Kinetic Bouncing Glass Orbs Simulation ---
+    // 4 orbital circles across the sphere surface with dynamic collision bounce
+    const orbTracks = [
+      {
+        angle: 0.0,
+        speed: 1.05,
+        dir: 1.0,
+        cooldown: 0,
+        u: new THREE.Vector3(1, 0, 0),
+        v: new THREE.Vector3(0, Math.cos(0.45), Math.sin(0.45)), // inclined ~26 deg
+      },
+      {
+        angle: Math.PI * 0.45,
+        speed: 0.95,
+        dir: -1.0,
+        cooldown: 0,
+        u: new THREE.Vector3(0, 1, 0),
+        v: new THREE.Vector3(Math.cos(-0.55), 0, Math.sin(-0.55)), // inclined ~32 deg
+      },
+      {
+        angle: Math.PI * 1.10,
+        speed: 1.10,
+        dir: 1.0,
+        cooldown: 0,
+        u: new THREE.Vector3(0, 0, 1),
+        v: new THREE.Vector3(Math.cos(0.65), Math.sin(0.65), 0), // inclined ~37 deg
+      },
+      {
+        angle: Math.PI * 1.65,
+        speed: 1.0,
+        dir: -1.0,
+        cooldown: 0,
+        u: new THREE.Vector3(1, 0, 1).normalize(),
+        v: new THREE.Vector3(-1, 2, 1).normalize(), // diagonal polar incline
+      },
     ];
-    // Exact radius from reference bundle: r = 1.9 (capsule tips are at 1.9 when uncompressed)
+
     const orbitRadius = 1.9;
+    const orbsList = [orb1, orb2, orb3, orb4];
+    const COLLISION_DIST = 0.65; // Each orb radius = 0.3 (0.60 is contact threshold)
+    const COLLISION_DIST_SQ = COLLISION_DIST * COLLISION_DIST;
 
-    function calcOrbPos(t: number, o: (typeof orbits)[0]): [number, number, number] {
-      const angle = o.dir * o.speed * t + o.phase;
-      if (o.plane === "xy") return [Math.cos(angle) * orbitRadius, Math.sin(angle) * orbitRadius, 0];
-      if (o.plane === "xz") return [Math.cos(angle) * orbitRadius, 0, Math.sin(angle) * orbitRadius];
-      if (o.plane === "yz") return [0, Math.cos(angle) * orbitRadius, Math.sin(angle) * orbitRadius];
-      return [Math.cos(angle) * orbitRadius, Math.sin(angle) * orbitRadius, 0];
-    }
+    let shadowFrames = 0;
 
-    // --- 12. Resize Handler ---
+    // --- 11. Resize Handler ---
     const handleResize = () => {
       if (!container || !renderer) return;
       width = container.clientWidth || window.innerWidth;
@@ -288,13 +325,9 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
       }
       camera.updateProjectionMatrix();
 
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.5));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
       renderer.setSize(width, height);
-
-      const rW = Math.floor(width / 2);
-      const rH = Math.floor(height / 2);
-      sceneRenderTarget.setSize(rW, rH);
-      glassUniforms.u_resolution.value.set(rW, rH);
+      shadowFrames = 0; // Refresh shadow buffer on viewport shift
     };
 
     handleResize();
@@ -306,25 +339,82 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
     });
     resizeObserver.observe(container);
 
-    // --- 13. Animation Loop ---
+    // --- 12. Animation Loop ---
     let animId: number;
-    const clock = new THREE.Clock();
+    let prevTime = performance.now();
 
-    const animate = () => {
+    const animate = (time: number) => {
       animId = requestAnimationFrame(animate);
 
-      const elapsedTime = clock.getElapsedTime();
+      // Clamp delta time to avoid large jumps if tab is backgrounded
+      const dt = Math.min(0.04, (time - prevTime) * 0.001);
+      prevTime = time;
 
-      // Compute 4 orb positions
-      const p1 = calcOrbPos(elapsedTime, orbits[0]);
-      const p2 = calcOrbPos(elapsedTime, orbits[1]);
-      const p3 = calcOrbPos(elapsedTime, orbits[2]);
-      const p4 = calcOrbPos(elapsedTime, orbits[3]);
+      // 1. Advance each orb along its orbital track
+      for (let i = 0; i < 4; i++) {
+        const track = orbTracks[i];
+        track.angle += track.dir * track.speed * dt;
+        track.cooldown = Math.max(0, track.cooldown - dt);
 
-      orb1.position.set(p1[0], p1[1], p1[2]);
-      orb2.position.set(p2[0], p2[1], p2[2]);
-      orb3.position.set(p3[0], p3[1], p3[2]);
-      orb4.position.set(p4[0], p4[1], p4[2]);
+        const c = Math.cos(track.angle) * orbitRadius;
+        const s = Math.sin(track.angle) * orbitRadius;
+        orbsList[i].position.set(
+          track.u.x * c + track.v.x * s,
+          track.u.y * c + track.v.y * s,
+          track.u.z * c + track.v.z * s
+        );
+      }
+
+      // 2. Dynamic Kinetic Bounce: When two small balls touch, they bounce and reverse direction!
+      for (let i = 0; i < 4; i++) {
+        for (let j = i + 1; j < 4; j++) {
+          const pA = orbsList[i].position;
+          const pB = orbsList[j].position;
+          const dx = pA.x - pB.x;
+          const dy = pA.y - pB.y;
+          const dz = pA.z - pB.z;
+          const distSq = dx * dx + dy * dy + dz * dz;
+
+          if (distSq < COLLISION_DIST_SQ) {
+            const trackA = orbTracks[i];
+            const trackB = orbTracks[j];
+
+            if (trackA.cooldown <= 0 && trackB.cooldown <= 0) {
+              // Elastic bounce: reverse orbital travel directions!
+              trackA.dir = -trackA.dir;
+              trackB.dir = -trackB.dir;
+
+              // Step angles apart to immediately separate from collision point
+              trackA.angle += trackA.dir * trackA.speed * 0.04;
+              trackB.angle += trackB.dir * trackB.speed * 0.04;
+
+              // Cooldown prevents chattering / sticking during bounce
+              trackA.cooldown = 0.35;
+              trackB.cooldown = 0.35;
+            }
+
+            // Visual separation push: guarantee they never clip or penetrate each other
+            const dist = Math.sqrt(distSq);
+            if (dist > 0.0001) {
+              const overlap = (COLLISION_DIST - dist) * 0.5;
+              const invDist = 1.0 / dist;
+              const nx = dx * invDist;
+              const ny = dy * invDist;
+              const nz = dz * invDist;
+
+              pA.x += nx * overlap;
+              pA.y += ny * overlap;
+              pA.z += nz * overlap;
+              pB.x -= nx * overlap;
+              pB.y -= ny * overlap;
+              pB.z -= nz * overlap;
+
+              pA.normalize().multiplyScalar(orbitRadius);
+              pB.normalize().multiplyScalar(orbitRadius);
+            }
+          }
+        }
+      }
 
       // Directly update the shader uniforms with the live sphere coordinates
       instancedUniforms.u_sphere1Position.value.copy(orb1.position);
@@ -336,26 +426,22 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
       instancedUniforms.u_noiseCoordOffset.value.set(0, 0);
       glassUniforms.u_noiseCoordOffset.value.set(0, 0);
 
-      // OrbitControls update
+      // OrbitControls update for smooth momentum damping
       controls.update();
 
-      // Pass 1: Render refraction texture pass (hide orbs so they don't refract themselves)
-      // autoUpdate is false and needsUpdate is false, skipping the shadow map depth render!
-      orbsGroup.visible = false;
-      renderer.setRenderTarget(sceneRenderTarget);
-      renderer.render(scene, camera);
-      renderer.setRenderTarget(null);
-      orbsGroup.visible = true;
+      // Static directional light shadow map: render once on startup/resize to avoid 60fps depth thrashing
+      if (shadowFrames < 2) {
+        renderer.shadowMap.needsUpdate = true;
+        shadowFrames++;
+      }
 
-      // Pass 2: Main screen render with native hardware 4x MSAA anti-aliasing
-      // needsUpdate = true triggers a single shadow map update for this frame
-      renderer.shadowMap.needsUpdate = true;
+      // Single-pass buttery 60fps render with native hardware 4x MSAA anti-aliasing
       renderer.render(scene, camera);
     };
 
-    animate();
+    animId = requestAnimationFrame(animate);
 
-    // --- 14. Cleanup ---
+    // --- 13. Cleanup ---
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
@@ -372,7 +458,6 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
       customDepthMat.dispose();
       orbGeo.dispose();
       glassMat.dispose();
-      sceneRenderTarget.dispose();
       renderer.dispose();
     };
   }, []);

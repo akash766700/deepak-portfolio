@@ -1,9 +1,9 @@
-import { Geist, Outfit, Carattere } from "next/font/google";
+import { Outfit, Carattere, Commissioner } from "next/font/google";
 
-export const GeistSans = Geist({
+export const commissionerFont = Commissioner({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-geist-sans",
+  variable: "--font-commissioner",
 });
 
 export const OutfitFont = Outfit({

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GeistSans, OutfitFont, Caratere } from "@/utils/font";
+import { commissionerFont, OutfitFont, Caratere } from "@/utils/font";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${OutfitFont.variable} ${Caratere.variable}`}
+      className={`${commissionerFont.variable} ${OutfitFont.variable} ${Caratere.variable}`}
     >
       <body>{children}</body>
     </html>

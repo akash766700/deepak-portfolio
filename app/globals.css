@@ -20,9 +20,17 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-outfit), var(--font-geist-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-commissioner), -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-outfit), sans-serif;
+}
+
+p {
+  font-family: var(--font-commissioner), sans-serif;
 }
 
 * {

@@ -83,23 +83,27 @@ export default function Navbar() {
               handleScrollTo("#hero");
             }}
             sx={{
+              position: "relative",
               width: { xs: 52, md: 64 },
               height: { xs: 52, md: 64 },
               borderRadius: "50%",
-              bgcolor: "rgba(26, 26, 26, 0.75)",
-              border: `1px solid ${Colors.BORDER}`,
-              backdropFilter: "blur(40px)",
-              WebkitBackdropFilter: "blur(40px)",
+              background:
+                "linear-gradient(135deg, rgba(220, 226, 235, 0.75) 0%, rgba(198, 206, 218, 0.65) 100%)",
+              border: "1px solid rgba(255, 255, 255, 0.85)",
+              backdropFilter: "blur(24px) saturate(180%)",
+              WebkitBackdropFilter: "blur(24px) saturate(180%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
               transition: "all 0.25s ease-in-out",
-              boxShadow: "0 10px 35px rgba(0, 0, 0, 0.4)",
+              boxShadow:
+                "0 10px 30px -5px rgba(15, 23, 42, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)",
               "&:hover": {
-                transform: "scale(1.06)",
-                borderColor: Colors.TEXT_SECONDARY,
-                bgcolor: Colors.SURFACE_CARD,
+                transform: "scale(1.05)",
+                background:
+                  "linear-gradient(135deg, rgba(228, 234, 242, 0.85) 0%, rgba(206, 214, 226, 0.75) 100%)",
+                borderColor: "#FFFFFF",
               },
             }}
             aria-label="Deepak Gupta"
@@ -116,26 +120,29 @@ export default function Navbar() {
                 userSelect: "none",
                 pointerEvents: "none",
                 display: "block",
-                filter: "drop-shadow(0 2px 10px rgba(0, 0, 0, 0.6))",
+                filter: "drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25))",
               }}
             />
           </Box>
 
-          {/* Exact Conicorn Nav Actions Capsule (Balanced 64px height) */}
+          {/* Translucent Light Grey Liquid Glass Actions Capsule */}
           <Box
             sx={{
+              position: "relative",
               height: { xs: 52, md: 64 },
               borderRadius: "999px",
-              bgcolor: "rgba(26, 26, 26, 0.75)",
-              border: `1px solid ${Colors.BORDER}`,
-              backdropFilter: "blur(40px)",
-              WebkitBackdropFilter: "blur(40px)",
+              background:
+                "linear-gradient(135deg, rgba(220, 226, 235, 0.75) 0%, rgba(198, 206, 218, 0.65) 100%)",
+              border: "1px solid rgba(255, 255, 255, 0.85)",
+              backdropFilter: "blur(24px) saturate(180%)",
+              WebkitBackdropFilter: "blur(24px) saturate(180%)",
               display: "flex",
               alignItems: "center",
               pl: { xs: 1.8, md: 2.8 },
               pr: { xs: 0.6, md: "5px" },
               gap: { xs: 1.5, md: 3 }, // 24px gap between menu & CTA
-              boxShadow: "0 10px 35px rgba(0, 0, 0, 0.4)",
+              boxShadow:
+                "0 10px 30px -5px rgba(15, 23, 42, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)",
             }}
           >
             {/* Menu Toggle Button */}
@@ -146,7 +153,7 @@ export default function Navbar() {
               sx={{
                 background: "transparent",
                 border: menuOpen
-                  ? "1px solid rgba(255, 255, 255, 0.35)"
+                  ? "1px solid rgba(15, 23, 42, 0.2)"
                   : "1px solid transparent",
                 borderRadius: "999px",
                 outline: "none",
@@ -156,10 +163,10 @@ export default function Navbar() {
                 cursor: "pointer",
                 px: { xs: 1.2, md: 1.6 },
                 py: { xs: 0.6, md: 0.8 },
-                color: Colors.TEXT_PRIMARY,
+                color: "#0F172A",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  bgcolor: "rgba(255, 255, 255, 0.06)",
+                  bgcolor: "rgba(15, 23, 42, 0.06)",
                 },
               }}
               aria-expanded={menuOpen}
@@ -173,7 +180,7 @@ export default function Navbar() {
                     fontSize: "14px",
                     fontWeight: 600,
                     lineHeight: 1,
-                    color: Colors.WHITE,
+                    color: "#0F172A",
                     width: 20,
                     textAlign: "center",
                   }}
@@ -181,7 +188,7 @@ export default function Navbar() {
                   ✕
                 </Typography>
               ) : (
-                /* Conicorn '=' 2-line Hamburger Icon (18px x 2px) */
+                /* 2-line Hamburger Icon (18px x 2px) */
                 <Box
                   sx={{
                     width: 20,
@@ -196,7 +203,7 @@ export default function Navbar() {
                     sx={{
                       width: 18,
                       height: 2,
-                      bgcolor: Colors.WHITE,
+                      bgcolor: "#0F172A",
                       borderRadius: "99px",
                     }}
                   />
@@ -204,7 +211,7 @@ export default function Navbar() {
                     sx={{
                       width: 18,
                       height: 2,
-                      bgcolor: Colors.WHITE,
+                      bgcolor: "#0F172A",
                       borderRadius: "99px",
                     }}
                   />
@@ -214,9 +221,9 @@ export default function Navbar() {
               <Typography
                 sx={{
                   fontSize: { xs: "15px", md: "16px" },
-                  fontWeight: 500,
+                  fontWeight: 600,
                   letterSpacing: "-0.02em",
-                  color: Colors.TEXT_PRIMARY,
+                  color: "#0F172A",
                   fontFamily: "var(--font-outfit), var(--font-geist-sans), sans-serif",
                   userSelect: "none",
                 }}
@@ -225,13 +232,13 @@ export default function Navbar() {
               </Typography>
             </Box>
 
-            {/* CTA Pill Button (54px height to match 64px capsule) */}
+            {/* CTA Pill Button (White with subtle depth so it floats on transparent glass) */}
             <Button
               onClick={() => handleScrollTo("#contact")}
               sx={{
                 height: { xs: 42, md: 54 },
-                bgcolor: Colors.WHITE,
-                color: Colors.SURFACE_CARD,
+                bgcolor: "#FFFFFF",
+                color: "#0F172A",
                 borderRadius: "999px",
                 px: { xs: 2.2, md: 3 },
                 py: 0,
@@ -241,11 +248,13 @@ export default function Navbar() {
                 textTransform: "none",
                 fontFamily: "var(--font-outfit), var(--font-geist-sans), sans-serif",
                 lineHeight: 1,
-                boxShadow: "0 4px 14px rgba(0, 0, 0, 0.2)",
+                border: "1px solid rgba(15, 23, 42, 0.08)",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
                 transition: "all 0.2s ease-in-out",
                 "&:hover": {
-                  bgcolor: "#f0f0f0",
+                  bgcolor: "#F8FAFC",
                   transform: "scale(1.02)",
+                  boxShadow: "0 6px 16px rgba(0, 0, 0, 0.12)",
                 },
               }}
             >
@@ -265,11 +274,13 @@ export default function Navbar() {
                 transform: { xs: "translateX(-50%)", sm: "none" },
                 width: { xs: 310, sm: 360 },
                 borderRadius: "32px",
-                bgcolor: "rgba(26, 26, 26, 0.88)",
-                border: `1px solid ${Colors.BORDER}`,
-                backdropFilter: "blur(40px)",
-                WebkitBackdropFilter: "blur(40px)",
-                boxShadow: "0 28px 70px rgba(0, 0, 0, 0.8)",
+                background:
+                  "linear-gradient(135deg, rgba(240, 244, 250, 0.85) 0%, rgba(220, 228, 238, 0.75) 100%)",
+                border: "1px solid rgba(255, 255, 255, 0.85)",
+                backdropFilter: "blur(32px) saturate(180%)",
+                WebkitBackdropFilter: "blur(32px) saturate(180%)",
+                boxShadow:
+                  "0 28px 70px rgba(15, 23, 42, 0.12), inset 0 1px 2px 0 rgba(255, 255, 255, 0.9)",
                 p: { xs: 3.5, sm: 4.5 },
                 zIndex: 1250,
               }}
@@ -292,12 +303,12 @@ export default function Navbar() {
                         fontSize: "16px",
                         fontWeight: 500,
                         letterSpacing: "-0.01em",
-                        color: Colors.TEXT_SECONDARY,
+                        color: "#475569",
                         cursor: "pointer",
                         fontFamily: "var(--font-outfit), var(--font-geist-sans), sans-serif",
                         transition: "color 0.2s ease, transform 0.2s ease",
                         "&:hover": {
-                          color: Colors.WHITE,
+                          color: "#0F172A",
                           transform: "translateX(4px)",
                         },
                       }}
@@ -317,12 +328,12 @@ export default function Navbar() {
                         fontSize: "16px",
                         fontWeight: 500,
                         letterSpacing: "-0.01em",
-                        color: Colors.TEXT_SECONDARY,
+                        color: "#475569",
                         cursor: "pointer",
                         fontFamily: "var(--font-outfit), var(--font-geist-sans), sans-serif",
                         transition: "color 0.2s ease, transform 0.2s ease",
                         "&:hover": {
-                          color: Colors.WHITE,
+                          color: "#0F172A",
                           transform: "translateX(4px)",
                         },
                       }}

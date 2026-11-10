@@ -6,28 +6,45 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import ThreeChallengeScene from "@/components/layouts/threejs-challenge/ThreeChallengeScene";
 import ConstellationField from "@/components/widgets/ConstellationField";
+import DrawAttentionText from "@/components/widgets/DrawAttentionText";
 import { Caratere } from "@/utils/font";
+import { Colors } from "@/utils/enum";
 
-const GREETINGS = ["Hey", "Hola", "Halo", "नमस्ते", "Hello"];
+const GREETINGS = ["Hey,", "Hola,", "Halo,", "नमस्ते,", "Hello,"];
 
 export default function HeroSection() {
   const [index, setIndex] = useState(0);
-  const [nextIndex, setNextIndex] = useState<number | null>(null);
+  const [isExiting, setIsExiting] = useState(false);
+  const [greetingSize, setGreetingSize] = useState(52);
 
-  // Premium 3D Kinetic Greeting Rotation
+  // Responsive sizing for the animated greeting
   useEffect(() => {
-    const timer = setInterval(() => {
-      const next = (index + 1) % GREETINGS.length;
-      setNextIndex(next);
+    const handleResize = () => {
+      if (typeof window !== "undefined") {
+        if (window.innerWidth < 600) {
+          setGreetingSize(38);
+        } else if (window.innerWidth < 960) {
+          setGreetingSize(46);
+        } else {
+          setGreetingSize(52);
+        }
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
+  // After drawing & wipe finishes, pause for 2.2s then smoothly cycle to next greeting
+  const handleDrawComplete = () => {
+    setTimeout(() => {
+      setIsExiting(true);
       setTimeout(() => {
-        setIndex(next);
-        setNextIndex(null);
-      }, 500);
-    }, 2700);
-
-    return () => clearInterval(timer);
-  }, [index]);
+        setIndex((prev) => (prev + 1) % GREETINGS.length);
+        setIsExiting(false);
+      }, 380);
+    }, 2200);
+  };
 
   return (
     <Box
@@ -74,6 +91,7 @@ export default function HeroSection() {
         maxWidth="xl"
         sx={{
           position: "relative",
+          top: "-5px",
           zIndex: 2,
           px: { xs: 2.5, sm: 4, md: 6, lg: 8 },
           pointerEvents: "none", // Allows drag-rotation on the 3D ball through empty areas
@@ -81,7 +99,7 @@ export default function HeroSection() {
       >
         <Box
           sx={{
-            maxWidth: { xs: "100%", md: "560px", lg: "620px" },
+            maxWidth: { xs: "100%", md: "720px", lg: "860px" },
             display: "flex",
             flexDirection: "column",
             alignItems: { xs: "center", md: "flex-start" },
@@ -89,138 +107,134 @@ export default function HeroSection() {
             pointerEvents: "auto", // Allows text selection
           }}
         >
-          {/* Welcome Greeting: 3D Rolling Cursive Greeting + Bold "I'm Deepak Gupta." */}
+          {/* Row 1: DrawAttention Animated Greeting (Fixed height slot: ZERO vertical shift for content below) */}
           <Box
             sx={{
+              height: { xs: "46px", sm: "54px", md: "62px" },
+              minHeight: { xs: "46px", sm: "54px", md: "62px" },
               display: "flex",
-              alignItems: "center",
-              gap: { xs: 1, sm: 1.2 },
-              mb: 1.8,
-              flexWrap: "wrap",
+              alignItems: "flex-end",
+              mb: { xs: 0.6, sm: 0.8, md: 1.0 },
+              opacity: isExiting ? 0 : 1,
+              transform: isExiting ? "translateY(-4px)" : "translateY(0)",
+              filter: isExiting ? "blur(2px)" : "blur(0)",
+              transition: "opacity 0.35s ease, transform 0.35s ease, filter 0.35s ease",
             }}
           >
-            {/* 3D Rolling Calligraphic Greeting in Carattere */}
-            <Box
-              className={Caratere.className}
-              sx={{
-                position: "relative",
-                display: "inline-flex",
-                alignItems: "center",
-                height: { xs: "38px", sm: "44px", md: "50px" },
-                fontSize: { xs: "34px", sm: "40px", md: "46px" },
-                color: "#0F172A",
-                fontFamily: `${Caratere.style.fontFamily}, 'Kohinoor Devanagari', 'Noto Sans Devanagari', cursive, sans-serif`,
-                lineHeight: 1,
-                overflow: "hidden",
-                perspective: "500px",
-                verticalAlign: "middle",
-              }}
-            >
-              {/* Outgoing Word */}
-              <Box
-                component="span"
-                sx={{
-                  display: "inline-block",
-                  transition: "transform 0.48s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.38s ease, filter 0.38s ease",
-                  transform: nextIndex !== null ? "translateY(-120%) rotateX(55deg)" : "translateY(0%) rotateX(0deg)",
-                  opacity: nextIndex !== null ? 0 : 1,
-                  filter: nextIndex !== null ? "blur(3px)" : "blur(0px)",
-                  transformOrigin: "bottom center",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {GREETINGS[index]},
-              </Box>
-
-              {/* Incoming Word (Smooth 3D perspective roll from below) */}
-              {nextIndex !== null && (
-                <Box
-                  component="span"
-                  sx={{
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                    display: "inline-block",
-                    whiteSpace: "nowrap",
-                    transformOrigin: "top center",
-                    animation: "greetingRollIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-                    "@keyframes greetingRollIn": {
-                      "0%": {
-                        transform: "translateY(120%) rotateX(-55deg)",
-                        opacity: 0,
-                        filter: "blur(3px)",
-                      },
-                      "100%": {
-                        transform: "translateY(0%) rotateX(0deg)",
-                        opacity: 1,
-                        filter: "blur(0px)",
-                      },
-                    },
-                  }}
-                >
-                  {GREETINGS[nextIndex]},
-                </Box>
-              )}
-            </Box>
-
-            {/* "I'm Deepak Gupta." - Bold Authoritative Executive Typography */}
-            <Typography
-              component="span"
-              sx={{
-                fontSize: { xs: "18px", sm: "21px", md: "24px" },
-                fontFamily: "var(--font-outfit), var(--font-geist-sans), sans-serif",
-                letterSpacing: "-0.015em",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <Box component="span" sx={{ fontWeight: 600, color: "#475569" }}>
-                I&apos;m
-              </Box>
-              <Box
-                component="span"
-                sx={{
-                  fontWeight: 800,
-                  color: "#0F172A",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Deepak Gupta.
-              </Box>
-            </Typography>
+            <DrawAttentionText
+              key={index}
+              text={GREETINGS[index]}
+              fontFamily={`var(--font-carattere), ${Caratere.style.fontFamily}, 'Kohinoor Devanagari', 'Noto Sans Devanagari', cursive, sans-serif`}
+              fontSize={greetingSize}
+              fontWeight={400}
+              strokeWidth={1.4}
+              drawDuration={1.3}
+              fillDelay={0.3}
+              onComplete={handleDrawComplete}
+            />
           </Box>
 
-          {/* Main Headline (Scaled Down & Harmonious) */}
+          {/* Row 2: "I'm Deepak Gupta." - Directly below greeting */}
           <Typography
-            variant="h1"
+            component="h1"
             sx={{
-              fontSize: { xs: "1.35rem", sm: "1.65rem", md: "1.9rem", lg: "2.2rem" },
-              fontWeight: 800,
-              lineHeight: 1.24,
-              letterSpacing: "-0.025em",
-              color: "#0F172A",
-              fontFamily: "var(--font-outfit), var(--font-geist-sans), sans-serif",
-              mb: { xs: 2.0, md: 2.4 },
+              fontSize: { xs: "28px", sm: "38px", md: "48px", lg: "58px" },
+              fontFamily: "var(--font-outfit), sans-serif",
+              letterSpacing: "-0.03em",
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: { xs: "6px", sm: "8px", md: "10px" },
+              lineHeight: 1.1,
+              mb: { xs: 1.6, sm: 1.9, md: 2.3 },
             }}
           >
-            Making finance less complicated and technology more meaningful.
+            <Box
+              component="span"
+              sx={{
+                fontWeight: 500,
+                background: Colors.GOLD_METALLIC,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              I&apos;m
+            </Box>
+            <Box
+              component="span"
+              sx={{
+                fontWeight: 500,
+                color: "#0F172A",
+                letterSpacing: "-0.025em",
+              }}
+            >
+              Deepak Gupta.
+            </Box>
           </Typography>
 
-          {/* Subheadline Tagline */}
+          {/* Row 2: Main Headline: Two-Tone (Deep Slate + 24K Gold Punchline from DG Logo) */}
           <Typography
+            variant="h2"
             sx={{
-              fontSize: { xs: "15px", sm: "16px", md: "17px" },
-              lineHeight: 1.65,
-              color: "#475569",
-              maxWidth: 540,
-              fontFamily: "var(--font-geist-sans), sans-serif",
-              letterSpacing: "-0.01em",
+              fontSize: { xs: "1.05rem", sm: "1.2rem", md: "1.35rem", lg: "1.52rem" },
+              fontWeight: 700,
+              lineHeight: 1.34,
+              letterSpacing: "-0.022em",
+              color: Colors.TEXT_DARK,
+              fontFamily: "var(--font-outfit), var(--font-geist-sans), sans-serif",
             }}
           >
-            I bring numbers, strategy and automation together to turn everyday challenges into smarter possibilities.
+            Making finance less complicated and technology
+            <Box
+              component="span"
+              sx={{
+                display: "block",
+                whiteSpace: { xs: "normal", sm: "nowrap" },
+                background: Colors.GOLD_METALLIC,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                fontWeight: 700,
+              }}
+            >
+              more meaningful.
+            </Box>
           </Typography>
+
+          {/* Row 3: Strategic Value Description - Exactly 2 Lines (Font: Commissioner) */}
+          <Box
+            sx={{
+              mt: { xs: 1.8, sm: 2.0, md: 2.4 },
+              maxWidth: { xs: "100%", md: "720px", lg: "780px" },
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: { xs: "13.5px", sm: "14.5px", md: "15px" },
+                lineHeight: 1.6,
+                color: "#475569",
+                fontFamily: "var(--font-commissioner), sans-serif",
+                letterSpacing: "-0.01em",
+                fontWeight: 400,
+                whiteSpace: { xs: "normal", md: "nowrap" },
+              }}
+            >
+              We bring clarity to complex financial experiences through thoughtful design and intelligent technology.
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: "13.5px", sm: "14.5px", md: "15px" },
+                lineHeight: 1.6,
+                color: "#475569",
+                fontFamily: "var(--font-commissioner), sans-serif",
+                letterSpacing: "-0.01em",
+                fontWeight: 400,
+                mt: 0.4,
+                whiteSpace: { xs: "normal", md: "nowrap" },
+              }}
+            >
+              Building smarter experiences that empower people to make better financial decisions.
+            </Typography>
+          </Box>
         </Box>
       </Container>
     </Box>
