@@ -17,7 +17,6 @@ export default function HeroSection() {
   const [isExiting, setIsExiting] = useState(false);
   const [greetingSize, setGreetingSize] = useState(52);
 
-  // Responsive sizing for the animated greeting
   useEffect(() => {
     const handleResize = () => {
       if (typeof window !== "undefined") {
