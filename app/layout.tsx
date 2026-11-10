@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Deepak Gupta | Senior Accountant & Financial Specialist",
   description:
-    "Portfolio of Deepak Gupta, Senior Accountant with 8+ years of experience in financial accounting, auditing, ERP systems, and IT automation.",
+    "Portfolio of Deepak Gupta, Senior Accountant with 10+ years of experience across Summercool, Bajaj Electronics, and Paavan Chintan Dhara Ashram. Expertise in financial accounting, statutory audits, ERP, and IT automation.",
   icons: {
     icon: "/Favicon.png",
   },

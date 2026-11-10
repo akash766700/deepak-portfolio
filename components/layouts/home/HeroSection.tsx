@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import ThreeChallengeScene from "@/components/layouts/threejs-challenge/ThreeChallengeScene";
-import ConstellationField from "@/components/widgets/ConstellationField";
 import DrawAttentionText from "@/components/widgets/DrawAttentionText";
 import { Caratere } from "@/utils/font";
 import { Colors } from "@/utils/enum";
@@ -56,23 +55,11 @@ export default function HeroSection() {
         height: "100vh",
         display: "flex",
         alignItems: "center",
-        overflow: "hidden",
-        bgcolor: "#FAFBFD",
+        overflow: "visible",
+        bgcolor: "transparent",
       }}
     >
-      {/* Layer 0: Constellation Field Animated Background */}
-      <ConstellationField
-        mode="light"
-        color="#1E293B"
-        speed={1.2}
-        size={0.8}
-        strokeWidth={1.1}
-        length={1.3}
-        density={0.7}
-        opacity={0.5}
-      />
-
-      {/* Layer 1: 3D WebGL Ball (Freely Floating on the Right Side, ZERO Card / Box) */}
+      {/* Layer 1: 3D WebGL Ball (Exact original position & scale) */}
       <Box
         sx={{
           position: "absolute",
