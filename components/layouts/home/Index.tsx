@@ -4,6 +4,9 @@ import Navbar from "@/components/widgets/Navbar";
 import ConstellationField from "@/components/widgets/ConstellationField";
 import HeroSection from "./HeroSection";
 import AboutStatementSection from "./AboutStatementSection";
+import WhyChooseSection from "./WhyChooseSection";
+import CapabilitiesSection from "./CapabilitiesSection";
+import ProcessStepperSection from "./ProcessStepperSection";
 
 export default function HomeLayout() {
   return (
@@ -47,6 +50,15 @@ export default function HomeLayout() {
 
       {/* Section 02: About Statement with Word-by-Word Scroll Reveal & Video Card */}
       <AboutStatementSection />
+
+      {/* Section 03: Why Choose Me / Value Proposition Cards */}
+      <WhyChooseSection />
+
+      {/* Section 04: Capabilities & Services Bento Grid */}
+      <CapabilitiesSection />
+
+      {/* Section 05: How We Work Process Stepper Timeline */}
+      <ProcessStepperSection />
     </Box>
   );
 }
