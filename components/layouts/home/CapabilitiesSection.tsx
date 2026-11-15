@@ -384,13 +384,13 @@ export default function CapabilitiesSection() {
                   <Box
                     key={i}
                     sx={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: "15px",
-                      background: "linear-gradient(180deg, #323640 0%, #1E2127 100%)",
-                      border: "1px solid rgba(255, 255, 255, 0.16)",
+                      width: 52,
+                      height: 52,
+                      borderRadius: "18px",
+                      bgcolor: "rgb(82, 82, 82)",
+                      border: "1px solid rgba(255, 255, 255, 0.12)",
                       boxShadow:
-                        "0 6px 16px rgba(0, 0, 0, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.2)",
+                        "0 10px 24px -2px rgba(0, 0, 0, 0.42), 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.3)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",

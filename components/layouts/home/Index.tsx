@@ -7,6 +7,12 @@ import AboutStatementSection from "./AboutStatementSection";
 import WhyChooseSection from "./WhyChooseSection";
 import CapabilitiesSection from "./CapabilitiesSection";
 import ProcessStepperSection from "./ProcessStepperSection";
+import CaseStudiesSection from "./CaseStudiesSection";
+import TechnologyEcosystemSection from "./TechnologyEcosystemSection";
+import TestimonialsSection from "./TestimonialsSection";
+import PricingSection from "./PricingSection";
+import FAQSection from "./FAQSection";
+import FooterSection from "./FooterSection";
 
 export default function HomeLayout() {
   return (
@@ -59,6 +65,24 @@ export default function HomeLayout() {
 
       {/* Section 05: How We Work Process Stepper Timeline */}
       <ProcessStepperSection />
+
+      {/* Section 06: What We've Built Case Studies Slider */}
+      <CaseStudiesSection />
+
+      {/* Section 07: Technology Ecosystem Integrations Marquee */}
+      <TechnologyEcosystemSection />
+
+      {/* Section 08: What They’re Saying Testimonials Masonry */}
+      <TestimonialsSection />
+
+      {/* Section 09: Built for Growth at Every Stage Pricing */}
+      <PricingSection />
+
+      {/* Section 10: Common Questions FAQs */}
+      <FAQSection />
+
+      {/* Footer Section: Contact Form, Links & Brand Footer */}
+      <FooterSection />
     </Box>
   );
 }
