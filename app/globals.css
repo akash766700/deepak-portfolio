@@ -43,3 +43,21 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+@keyframes marqueeL2R {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+
+@keyframes marqueeR2L {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}

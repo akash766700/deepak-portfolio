@@ -179,11 +179,13 @@ export default function DrawAttentionText({
         aria-hidden="true"
       >
         <defs>
-          {/* 24K Gold Gradient for Outline Line & Fill */}
+          {/* Pastel Rainbow Gradient for Outline Line & Fill (Matching Navbar & Footer) */}
           <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#D97706" />
-            <stop offset="50%" stopColor="#F59E0B" />
-            <stop offset="100%" stopColor="#FFB330" />
+            <stop offset="0%" stopColor="#BB99FF" />
+            <stop offset="25%" stopColor="#EEAE38" />
+            <stop offset="50%" stopColor="#F68CCA" />
+            <stop offset="75%" stopColor="#3EBDF2" />
+            <stop offset="100%" stopColor="#8B9BFC" />
           </linearGradient>
 
           {/* Wipe ClipPath */}

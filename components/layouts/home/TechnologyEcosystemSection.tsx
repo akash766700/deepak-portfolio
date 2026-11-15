@@ -4,8 +4,27 @@ import React, { useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { keyframes } from "@emotion/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+const marqueeL2R = keyframes`
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+`;
+
+const marqueeR2L = keyframes`
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+`;
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -259,14 +278,13 @@ export default function TechnologyEcosystemSection() {
               "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
           }}
         >
-          {/* STRIP 1: User requested -> Left to Right */}
+          {/* STRIP 1: Continuous Smooth Auto-Glide Left to Right */}
           <Box
             sx={{
               display: "flex",
               width: "max-content",
               gap: "4px",
-              animation: "marqueeL2R 45s linear infinite",
-              "&:hover": { animationPlayState: "paused" },
+              animation: `${marqueeL2R} 45s linear infinite`,
               willChange: "transform",
             }}
           >
@@ -275,14 +293,13 @@ export default function TechnologyEcosystemSection() {
             ))}
           </Box>
 
-          {/* STRIP 2: User requested -> Right to Left */}
+          {/* STRIP 2: Continuous Smooth Auto-Glide Right to Left */}
           <Box
             sx={{
               display: "flex",
               width: "max-content",
               gap: "4px",
-              animation: "marqueeR2L 48s linear infinite",
-              "&:hover": { animationPlayState: "paused" },
+              animation: `${marqueeR2L} 48s linear infinite`,
               willChange: "transform",
             }}
           >
@@ -291,14 +308,13 @@ export default function TechnologyEcosystemSection() {
             ))}
           </Box>
 
-          {/* STRIP 3: User requested -> Left to Right */}
+          {/* STRIP 3: Continuous Smooth Auto-Glide Left to Right */}
           <Box
             sx={{
               display: "flex",
               width: "max-content",
               gap: "4px",
-              animation: "marqueeL2R 52s linear infinite",
-              "&:hover": { animationPlayState: "paused" },
+              animation: `${marqueeL2R} 52s linear infinite`,
               willChange: "transform",
             }}
           >
@@ -338,7 +354,7 @@ export default function TechnologyEcosystemSection() {
             }}
           />
 
-          {/* Inner Dark Metallic Circle Button (.framer-FlcSj.framer-y7qwek) */}
+          {/* Inner Dark Metallic Circle Button */}
           <Box
             component="a"
             href="#contact"
@@ -356,7 +372,7 @@ export default function TechnologyEcosystemSection() {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              gap: 1,
+              gap: 1.2,
               p: 2,
               textDecoration: "none",
               cursor: "pointer",
@@ -368,33 +384,35 @@ export default function TechnologyEcosystemSection() {
               },
             }}
           >
-            {/* Conicorn Center Spark / Snowflake Emblem */}
+            {/* Deepak Gupta Official Brand Logo */}
             <Box
               component="img"
-              src="/assets/integrations/conicorn-emblem.png"
-              alt="Conicorn Emblem"
+              src="/LogoNav.png"
+              alt="Deepak Gupta"
               sx={{
-                width: { xs: 36, md: 46 },
-                height: { xs: 36, md: 46 },
+                width: { xs: 34, md: 44 },
+                height: { xs: 34, md: 44 },
                 objectFit: "contain",
                 display: "block",
+                filter: "brightness(0) invert(1)",
+                opacity: 0.95,
               }}
             />
 
-            {/* Try with Conicorn label */}
+            {/* Connect with Deepak label */}
             <Typography
               sx={{
                 fontFamily: "var(--font-outfit), sans-serif",
-                fontSize: { xs: "0.78rem", md: "0.92rem" },
-                fontWeight: 500,
+                fontSize: { xs: "0.82rem", md: "0.95rem" },
+                fontWeight: 600,
                 color: "#FFFFFF",
-                letterSpacing: "-0.01em",
+                letterSpacing: "-0.015em",
                 textAlign: "center",
                 lineHeight: 1.2,
                 userSelect: "none",
               }}
             >
-              Try with Conicorn
+              Connect with Deepak
             </Typography>
           </Box>
         </Box>
@@ -425,26 +443,6 @@ export default function TechnologyEcosystemSection() {
           secure, high-performance system that grows with you.
         </Typography>
       </Container>
-
-      {/* CSS KEYFRAMES FOR INFINITE SMOOTH MARQUEE */}
-      <style jsx global>{`
-        @keyframes marqueeL2R {
-          0% {
-            transform: translateX(-50%);
-          }
-          100% {
-            transform: translateX(0%);
-          }
-        }
-        @keyframes marqueeR2L {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
     </Box>
   );
 }

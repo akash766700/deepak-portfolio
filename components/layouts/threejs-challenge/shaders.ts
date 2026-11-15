@@ -222,12 +222,12 @@ void main() {
     vec3 baseColor = v_instanceColor * u_color;
     vec3 color = baseColor * wrapLight * aoFactor * shadow;
 
-    // Rich metallic highlight for the accent gold dots (heading gradient colors)
-    if (v_instanceColor.b < 0.8) {
+    // Luminous glass specular highlight for the accent pastel rainbow dots
+    if (length(v_instanceColor - vec3(1.0)) > 0.05) {
         vec3 V = normalize(-v_viewPosition);
         vec3 H = normalize(L + V);
         float spec = pow(max(0.0, dot(N, H)), 24.0);
-        color += spec * 0.45 * vec3(1.0, 0.80, 0.30);
+        color += spec * 0.40 * vec3(1.0, 1.0, 1.0);
     }
 
     gl_FragColor = vec4(color, 1.0);

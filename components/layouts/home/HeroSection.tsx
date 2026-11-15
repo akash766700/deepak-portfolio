@@ -139,7 +139,7 @@ export default function HeroSection() {
               component="span"
               sx={{
                 fontWeight: 500,
-                background: Colors.GOLD_METALLIC,
+                background: Colors.RAINBOW_GRADIENT,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -158,7 +158,7 @@ export default function HeroSection() {
             </Box>
           </Typography>
 
-          {/* Row 2: Main Headline: Two-Tone (Deep Slate + 24K Gold Punchline from DG Logo) */}
+          {/* Row 2: Main Headline: Two-Tone (Deep Slate + Rainbow Gradient Punchline) */}
           <Typography
             variant="h2"
             sx={{
@@ -176,7 +176,7 @@ export default function HeroSection() {
               sx={{
                 display: "block",
                 whiteSpace: { xs: "normal", sm: "nowrap" },
-                background: Colors.GOLD_METALLIC,
+                background: Colors.RAINBOW_GRADIENT,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 fontWeight: 700,

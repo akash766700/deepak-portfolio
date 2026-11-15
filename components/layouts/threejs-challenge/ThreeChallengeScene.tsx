@@ -164,17 +164,19 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
     const colorArray = new Float32Array(Mx * 3);
     colorArray.fill(1.0); // Default all capsules to crisp white (1, 1, 1)
 
-    // 11 Golden accent dots using the heading gradient colors (#D97706, #F59E0B, #FFB330)
-    const goldGradientPalette = [
-      [1.0, 0.702, 0.188],  // #FFB330 (Saffron Highlight)
-      [0.961, 0.620, 0.043], // #F59E0B (Vibrant 24K Gold)
-      [0.851, 0.467, 0.024], // #D97706 (Rich Amber Gold)
+    // 11 Accent dots matching the signature navbar pastel rainbow palette
+    const rainbowPalette = [
+      [0.804, 0.686, 1.000], // Soft Lilac (rgba 205, 175, 255)
+      [1.000, 0.922, 0.549], // Soft Warm Gold (rgba 255, 235, 140)
+      [1.000, 0.706, 0.922], // Blossom Pink (rgba 255, 180, 235)
+      [0.529, 0.882, 1.000], // Sky Cyan (rgba 135, 225, 255)
+      [0.627, 0.725, 1.000], // Royal Periwinkle (rgba 160, 185, 255)
     ];
 
-    const goldDotIndices = [240, 580, 890, 1180, 1420, 1650, 1920, 2180, 2450, 2680, 2850];
-    goldDotIndices.forEach((idx, i) => {
+    const rainbowDotIndices = [240, 580, 890, 1180, 1420, 1650, 1920, 2180, 2450, 2680, 2850];
+    rainbowDotIndices.forEach((idx, i) => {
       const c = idx * 3;
-      const col = goldGradientPalette[i % goldGradientPalette.length];
+      const col = rainbowPalette[i % rainbowPalette.length];
       colorArray[c] = col[0];
       colorArray[c + 1] = col[1];
       colorArray[c + 2] = col[2];

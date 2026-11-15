@@ -361,19 +361,19 @@ export default function WhyChooseSection() {
                         "0 0 18px rgba(255, 255, 255, 0.12), inset 0 1px 3px rgba(255, 255, 255, 0.4)",
                     }}
                   >
-                    {/* Ring 1 (Inner Metallic Silver Disc - 116px) */}
+                    {/* Ring 1 (Inner Metallic Silver Disc - 116px) with Whisper-Light Pastel Rainbow Sheen */}
                     <Box
                       className="glossy-3d-sphere ring-1-inner"
                       sx={{
                         width: { xs: 98, sm: 108, md: 116 },
                         height: { xs: 98, sm: 108, md: 116 },
                         borderRadius: "50%",
-                        // Exact Vertical Metallic Gradient: Bright silver top to soft slate bottom
+                        // Layered Metallic Silver + Whisper-Light Pastel Rainbow Iridescence + 3D Specular Highlight
                         background:
-                          "linear-gradient(180deg, #FFFFFF 0%, #EFF1F5 18%, #D6DBE5 46%, #ADB4C4 78%, #8D93A1 100%)",
+                          "radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.40) 28%, transparent 58%), linear-gradient(135deg, rgba(205, 175, 255, 0.32) 0%, rgba(255, 235, 140, 0.28) 25%, rgba(255, 180, 235, 0.28) 50%, rgba(135, 225, 255, 0.30) 75%, rgba(160, 185, 255, 0.32) 100%), linear-gradient(180deg, #FFFFFF 0%, #EFF1F5 18%, #D6DBE5 46%, #ADB4C4 78%, #8D93A1 100%)",
                         border: "1.5px solid rgba(255, 255, 255, 0.95)",
                         boxShadow:
-                          "inset 0 2.5px 4px rgba(255, 255, 255, 0.95), inset 0 -2px 4px rgba(0, 0, 0, 0.22), 0 12px 30px rgba(0, 0, 0, 0.25)",
+                          "inset 0 2.5px 4px rgba(255, 255, 255, 0.95), inset 0 -2px 4px rgba(0, 0, 0, 0.20), 0 12px 30px rgba(0, 0, 0, 0.22), 0 0 20px rgba(205, 175, 255, 0.22)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -392,7 +392,7 @@ export default function WhyChooseSection() {
                         }}
                       />
 
-                      {/* Exact Icon Rendering */}
+                      {/* Exact Pure White Icon Rendering */}
                       {card.icon === "star" && (
                         <Box
                           component="svg"
@@ -402,6 +402,7 @@ export default function WhyChooseSection() {
                             height: { xs: 42, sm: 46 },
                             fill: "#FFFFFF",
                             filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.25))",
+                            transition: "all 0.4s ease",
                           }}
                         >
                           {/* Chubby 5-point Star */}
@@ -424,6 +425,7 @@ export default function WhyChooseSection() {
                             height: { xs: 40, sm: 44 },
                             fill: "#FFFFFF",
                             filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.25))",
+                            transition: "all 0.4s ease",
                           }}
                         >
                           {/* Rocket fuselage angled at 45 deg */}
@@ -444,6 +446,7 @@ export default function WhyChooseSection() {
                             height: { xs: 38, sm: 42 },
                             fill: "#FFFFFF",
                             filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.25))",
+                            transition: "all 0.4s ease",
                           }}
                         >
                           {/* 4 Rounded Modules */}

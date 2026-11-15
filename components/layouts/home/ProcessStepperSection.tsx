@@ -120,6 +120,7 @@ const STEPS: StepItem[] = [
       </Box>
     ),
   },
+
   {
     number: "05",
     title: "Statutory Clearance & Scaling",
@@ -431,7 +432,7 @@ export default function ProcessStepperSection() {
           }}
         >
           {/* ============================================================ */}
-          {/* CONTINUOUS CENTER TIMELINE TRACK & DYNAMIC BLUE SCROLL LINE  */}
+          {/* CONTINUOUS CENTER TIMELINE TRACK & DYNAMIC COOL AURORA SCROLL LINE */}
           {/* ============================================================ */}
           <Box
             ref={trackRef}
@@ -441,13 +442,13 @@ export default function ProcessStepperSection() {
               bottom: { xs: "48px", md: "86px" }, // Ends strictly at Step 05's pin center — never overflows card
               left: { xs: "32px", md: "50%" },
               transform: { xs: "none", md: "translateX(-50%)" },
-              width: "2.5px",
+              width: { xs: "2.5px", md: "3px" },
               bgcolor: "rgba(0, 0, 0, 0.08)",
               zIndex: 2, // Level 2: On top of card background (zIndex 1), behind pin button (zIndex 10)
               pointerEvents: "none",
             }}
           >
-            {/* The Vibrant Blue Growing Progress Line (Native GSAP Tween + Glowing Head) */}
+            {/* 5-Step Harmonious Cool Palette: Soft Pink ➔ Lilac ➔ Periwinkle ➔ Sky ➔ Mint (Clean Rounded Tip, No Dot) */}
             <Box
               ref={progressBarRef}
               sx={{
@@ -457,28 +458,13 @@ export default function ProcessStepperSection() {
                 width: "100%",
                 height: "0%",
                 background:
-                  "linear-gradient(180deg, #818CF8 0%, #6366F1 50%, #A855F7 100%)",
-                boxShadow: "0 0 12px rgba(129, 140, 248, 0.8)",
+                  "linear-gradient(180deg, #F472B6 0%, #C084FC 25%, #818CF8 50%, #38BDF8 75%, #2DD4BF 100%)",
+                boxShadow:
+                  "0 0 10px rgba(192, 132, 252, 0.40), 0 0 18px rgba(45, 212, 191, 0.35)",
                 borderRadius: "9999px",
                 willChange: "height",
               }}
-            >
-              {/* Glowing leading head at the tip of the blue line */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  bottom: -3,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: 7,
-                  height: 7,
-                  borderRadius: "50%",
-                  bgcolor: "#A855F7",
-                  boxShadow: "0 0 10px #A855F7, 0 0 16px #818CF8",
-                  pointerEvents: "none",
-                }}
-              />
-            </Box>
+            />
           </Box>
 
           {STEPS.map((step, idx) => {

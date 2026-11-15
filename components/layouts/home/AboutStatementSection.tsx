@@ -326,18 +326,19 @@ export default function AboutStatementSection() {
             zIndex: 3,
             width: { xs: "88vw", sm: "62vw", md: "520px", lg: "580px" },
             height: { xs: "230px", sm: "300px", md: "340px", lg: "370px" },
-            // Deep squircle curvature matching the reference image
+            // Deep squircle curvature with hardware antialiasing
             borderRadius: { xs: "48px", sm: "72px", md: "96px", lg: "106px" },
             overflow: "hidden",
             cursor: "pointer",
-            // Ambient soft shadow + light outer vignette aura that smoothly blends with the background
-            boxShadow:
-              "0 25px 70px -15px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.5) inset",
+            isolation: "isolate",
+            transform: "translate3d(0, 0, 0)",
+            WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+            maskImage: "radial-gradient(white, black)",
+            boxShadow: "none", // 100% Zero shadow - NO grey halos or smudges
             transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
             "&:hover": {
               transform: "translateY(-6px) scale(1.02)",
-              boxShadow:
-                "0 32px 85px -15px rgba(15, 23, 42, 0.42), 0 0 0 1.5px rgba(255, 255, 255, 0.7) inset",
+              boxShadow: "none",
               "& .play-btn": {
                 transform: "translate(-50%, -50%) scale(1.12)",
                 bgcolor: "rgba(255, 255, 255, 0.75)",
@@ -353,24 +354,30 @@ export default function AboutStatementSection() {
             sx={{
               width: "100%",
               height: "100%",
+              borderRadius: "inherit",
+              display: "block",
               objectFit: "cover",
               objectPosition: "center center",
               filter: "contrast(1.06) saturate(1.08)",
+              transform: "translateZ(0)",
+              WebkitBackfaceVisibility: "hidden",
+              backfaceVisibility: "hidden",
+              imageRendering: "-webkit-optimize-contrast",
               transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
               "&:hover": {
-                transform: "scale(1.04)",
+                transform: "scale(1.04) translateZ(0)",
               },
             }}
           />
 
-          {/* Crisp Glass Border */}
+          {/* Crisp Smooth Border */}
           <Box
             sx={{
               position: "absolute",
               inset: 0,
               borderRadius: "inherit",
               pointerEvents: "none",
-              border: "1.5px solid rgba(255, 255, 255, 0.6)",
+              border: "1px solid rgba(255, 255, 255, 0.85)",
             }}
           />
 

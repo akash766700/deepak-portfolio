@@ -475,8 +475,8 @@ export default function PricingSection() {
                   height: 48,
                   borderRadius: "16px",
                   background:
-                    "radial-gradient(70.7% 70.7% at 50% 50%, rgb(131, 153, 255) 0%, rgb(179, 225, 255) 29%, rgb(255, 204, 253) 64%, rgb(253, 255, 188) 100%)",
-                  boxShadow: "inset 0px -1.5px 1.2px 0px rgb(215, 215, 215)",
+                    "linear-gradient(135deg, rgba(205, 175, 255, 0.45) 0%, rgba(255, 235, 140, 0.45) 25%, rgba(255, 180, 235, 0.45) 50%, rgba(135, 225, 255, 0.45) 75%, rgba(160, 185, 255, 0.45) 100%)",
+                  boxShadow: "inset 0px -1.5px 1.2px 0px rgb(215, 215, 215), 0 4px 12px rgba(205, 175, 255, 0.2)",
                 }}
               />
 
@@ -649,11 +649,12 @@ export default function PricingSection() {
             maxWidth: "1040px",
             mt: { xs: 4, md: 5 },
             borderRadius: { xs: "36px", sm: "48px", md: "80px" },
+            // Soft light pastel rainbow gradient matching navbar signature palette
             background:
-              "radial-gradient(88.9% 104.2% at 12.9% 5.8%, #c9aaff 0%, rgb(253, 255, 188) 25%, rgb(255, 204, 253) 50%, rgb(179, 225, 255) 75%, rgb(131, 153, 255) 100%)",
-            border: "1px solid #E6E6E6",
+              "radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.85) 0%, transparent 60%), linear-gradient(135deg, rgba(205, 175, 255, 0.35) 0%, rgba(255, 235, 140, 0.30) 25%, rgba(255, 180, 235, 0.30) 50%, rgba(135, 225, 255, 0.32) 75%, rgba(160, 185, 255, 0.35) 100%), #FFFFFF",
+            border: "1.5px solid rgba(255, 255, 255, 0.95)",
             boxShadow:
-              "inset 0px 0px 1px 2px #ffffff, inset 0px -2px 1px 0px rgba(0, 0, 0, 0.12), inset 0px 0px 40px 0px rgb(255, 255, 255)",
+              "0 14px 40px -10px rgba(15, 23, 42, 0.08), 0 0 24px rgba(205, 175, 255, 0.16), inset 0px 0px 1px 2px #ffffff",
             p: { xs: "36px 20px", sm: "44px 32px", md: "52px 40px" },
             display: "flex",
             flexDirection: "column",

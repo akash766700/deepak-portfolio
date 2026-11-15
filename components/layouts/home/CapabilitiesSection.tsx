@@ -993,7 +993,7 @@ export default function CapabilitiesSection() {
                   borderRadius: "50%",
                   border: "1.5px solid rgba(148, 163, 184, 0.55)",
                   background:
-                    "radial-gradient(circle at 50% 100%, rgba(244, 114, 182, 0.28) 0%, rgba(192, 132, 252, 0.16) 50%, transparent 100%)",
+                    "radial-gradient(circle at 50% 100%, rgba(255, 180, 235, 0.32) 0%, rgba(205, 175, 255, 0.22) 50%, transparent 100%)",
                 }}
               />
 
@@ -1079,14 +1079,16 @@ export default function CapabilitiesSection() {
               position: "relative",
               overflow: "hidden",
               border: "1.5px solid rgba(255, 255, 255, 0.95)",
-              // Exact Framer vibrant pastel rainbow mesh gradient
+              // Soft light pastel rainbow gradient matching navbar signature palette
               background:
-                "radial-gradient(circle at 10% 12%, rgba(254, 240, 138, 0.95) 0%, transparent 45%), radial-gradient(circle at 90% 15%, rgba(244, 114, 182, 0.85) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(192, 132, 252, 0.75) 0%, transparent 55%), radial-gradient(circle at 88% 85%, rgba(96, 165, 250, 0.9) 0%, transparent 50%), radial-gradient(circle at 15% 85%, rgba(129, 140, 248, 0.85) 0%, transparent 50%), #EEF2FF",
-              boxShadow: "0 14px 40px -10px rgba(99, 102, 241, 0.22)",
+                "radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.85) 0%, transparent 60%), linear-gradient(135deg, rgba(205, 175, 255, 0.35) 0%, rgba(255, 235, 140, 0.30) 25%, rgba(255, 180, 235, 0.30) 50%, rgba(135, 225, 255, 0.32) 75%, rgba(160, 185, 255, 0.35) 100%), #FFFFFF",
+              boxShadow:
+                "0 12px 32px -6px rgba(15, 23, 42, 0.08), 0 0 20px rgba(205, 175, 255, 0.16)",
               transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
               "&:hover": {
                 transform: "translateY(-4px)",
-                boxShadow: "0 22px 50px -10px rgba(99, 102, 241, 0.3)",
+                boxShadow:
+                  "0 18px 40px -6px rgba(15, 23, 42, 0.12), 0 0 28px rgba(205, 175, 255, 0.25)",
               },
             }}
           >
