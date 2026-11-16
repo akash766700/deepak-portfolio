@@ -38,3 +38,50 @@ export interface ProfileData {
   phone?: string;
   location?: string;
 }
+
+export interface CaseStudySlide {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  stats: {
+    value: string;
+    label: string;
+  }[];
+}
+
+export interface IntegrationItem {
+  id: string;
+  name: string;
+  category?: string;
+  icon: string;
+}
+
+export interface TestimonialItem {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  quote: string;
+}
+
+export interface VideoCardItem {
+  id: string;
+  title: string;
+  image: string;
+  videoUrl: string;
+}
+
+export interface FAQItemData {
+  number: string;
+  question: string;
+  answer: string;
+}
+
+export interface StepItemData {
+  number: string;
+  title: string;
+  description: string;
+  side: "left" | "right";
+}

@@ -5,45 +5,9 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
+import { FAQS_DATA } from "@/assets/Generic-data";
 
-interface FAQItemData {
-  number: string;
-  question: string;
-  answer: string;
-}
-
-const FAQ_ITEMS: FAQItemData[] = [
-  {
-    number: "1",
-    question: "What industries do you work with?",
-    answer:
-      "We work with businesses across a wide range of industries including real estate, healthcare, e-commerce, finance, education, legal, SaaS, marketing agencies, and local service businesses. Our AI automation systems are customized to fit your workflows, whether you need lead generation, customer support, appointment booking, CRM automation, or internal operations optimization.",
-  },
-  {
-    number: "2",
-    question: "How long does implementation take?",
-    answer:
-      "Project timelines typically range from 2 to 6 weeks, depending on complexity. Smaller automation systems — such as AI chatbots with CRM integration — can often be deployed within 2–3 weeks. More advanced projects involving multi-platform integrations, custom AI logic, internal workflow automation, and reporting dashboards may take 4–6 weeks or longer.",
-  },
-  {
-    number: "3",
-    question: "Do we need technical knowledge to work with you?",
-    answer:
-      "No technical background is required. We handle the entire process — from strategy and setup to integrations, testing, and deployment. Our goal is to make AI automation simple and accessible while ensuring your team can easily manage and use the system after launch.",
-  },
-  {
-    number: "4",
-    question: "Is AI automation secure?",
-    answer:
-      "Yes. Security and data privacy are a top priority in every system we build. We use secure APIs, encrypted connections, role-based access controls, and trusted platforms to ensure your business data remains protected. We also follow best practices for compliance and system reliability.",
-  },
-  {
-    number: "5",
-    question: "What kind of ROI can we expect?",
-    answer:
-      "Most businesses see ROI through reduced manual work, faster response times, increased lead conversion, and improved operational efficiency. Depending on the automation scope, clients often save dozens of hours per week while improving customer experience and scaling operations without increasing overhead.",
-  },
-];
+const FAQ_ITEMS = FAQS_DATA.items;
 
 export default function FAQSection() {
   // First item open by default as shown in the design reference
@@ -60,8 +24,7 @@ export default function FAQSection() {
       sx={{
         position: "relative",
         zIndex: 1,
-        pt: { xs: 8, md: 10 },
-        pb: { xs: 6, md: 8 },
+        py: { xs: 6, sm: 8, md: 10 },
         width: "100%",
         display: "flex",
         flexDirection: "column",
@@ -103,7 +66,7 @@ export default function FAQSection() {
               color: "#64748B",
             }}
           >
-            010
+            {FAQS_DATA.badgeNumber}
           </Typography>
           <Box
             sx={{
@@ -123,7 +86,7 @@ export default function FAQSection() {
               textTransform: "uppercase",
             }}
           >
-            FAQS
+            {FAQS_DATA.badgeLabel}
           </Typography>
         </Box>
 
@@ -132,17 +95,17 @@ export default function FAQSection() {
           variant="h2"
           component="h2"
           sx={{
-            fontFamily: "var(--font-commissioner), Inter, sans-serif",
-            fontSize: { xs: "32px", sm: "42px", md: "52px" },
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
+            fontFamily: "var(--font-outfit), sans-serif",
+            fontSize: { xs: "2rem", sm: "2.75rem", md: "3.25rem" },
+            fontWeight: 600,
+            letterSpacing: "-0.04em",
             color: "#1A1A1A",
             textAlign: "center",
             lineHeight: 1.15,
             mb: { xs: 4, md: 6 },
           }}
         >
-          Common Questions
+          {FAQS_DATA.title}
         </Typography>
 
         {/* Accordion List Container */}

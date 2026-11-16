@@ -305,7 +305,8 @@ export default function Navbar() {
                 left: { xs: "50%", sm: "auto" },
                 right: { xs: "auto", sm: 0 },
                 transform: { xs: "translateX(-50%)", sm: "none" },
-                width: { xs: 310, sm: 360 },
+                width: { xs: "calc(100vw - 32px)", sm: 360 },
+                maxWidth: 360,
                 borderRadius: "32px",
                 p: "1.2px", // Delicate 1.2px soft pastel rainbow outline
                 background:

@@ -8,101 +8,15 @@ import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TESTIMONIALS_DATA } from "@/assets/Generic-data";
+import { TestimonialItem, VideoCardItem } from "@/utils/type";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-interface TestimonialItem {
-  id: string;
-  name: string;
-  role: string;
-  avatar: string;
-  quote: string;
-}
-
-interface VideoCardItem {
-  id: string;
-  title: string;
-  image: string;
-  videoUrl: string;
-}
-
-// 7 Text Testimonials
-const TESTIMONIALS: Record<string, TestimonialItem> = {
-  "daniel-kim": {
-    id: "daniel-kim",
-    name: "Daniel Kim",
-    role: "Founder, ScaleLabs Education",
-    avatar: "/assets/testimonials/avatar-daniel-kim.png",
-    quote:
-      "Our enrollment process used to require manual follow-ups and spreadsheet tracking. Now, AI handles lead qualification, scheduling, reminders, and CRM updates automatically. We’ve increased enrollment conversion by 35% in just one quarter.",
-  },
-  "alex-johnson": {
-    id: "alex-johnson",
-    name: "Alex Johnson",
-    role: "Head of Operations, Finovate Consulting",
-    avatar: "/assets/testimonials/avatar-alex-johnson.png",
-    quote:
-      "Security and compliance were major concerns for us. They designed an automation architecture that was not only highly efficient but enterprise-grade secure.",
-  },
-  "david-lee": {
-    id: "david-lee",
-    name: "David Lee",
-    role: "Founder, Atodio Studio",
-    avatar: "/assets/testimonials/avatar-david-lee.png",
-    quote:
-      "We were spending hours on repetitive tasks. Their automation system saved us 30+ hours per week and dramatically improved our sales performance. Really impressive!",
-  },
-  "sarah-mitchell": {
-    id: "sarah-mitchell",
-    name: "Sarah Mitchell",
-    role: "COO, BrightPath SaaS",
-    avatar: "/assets/testimonials/avatar-sarah-mitchell.png",
-    quote:
-      "We struggled with inconsistent lead follow-ups and slow response times. Their AI automation blueprint gave us clarity first, then execution. Now, our CRM runs intelligently, leads are scored automatically, and follow-ups happen without manual effort. We’ve increased demo bookings by 40% while reducing operational friction.",
-  },
-  "jonathan-reed": {
-    id: "jonathan-reed",
-    name: "Jonathan Reed",
-    role: "Managing Director, Nexora Digital Agency",
-    avatar: "/assets/testimonials/avatar-jonathan-reed.png",
-    quote:
-      "We were scaling fast but drowning in manual workflows. Their automation system connected our CRM, email marketing, and reporting into one intelligent flow. The result? 30+ hours saved per week and complete visibility across our pipeline.",
-  },
-  "michael-tran": {
-    id: "michael-tran",
-    name: "Michael Tran",
-    role: "Founder & CEO, Skyline Realty Group",
-    avatar: "/assets/testimonials/avatar-michael-tran.png",
-    quote:
-      "We reduced admin work by nearly 50% and doubled our qualified appointment bookings. The ROI was faster than we expected — and the system continues to scale with us.",
-  },
-  "laura-martinez": {
-    id: "laura-martinez",
-    name: "Laura Martinez",
-    role: "CMO, Elevate Commerce Co.",
-    avatar: "/assets/testimonials/avatar-laura-martinez.png",
-    quote:
-      "Marketing automation always felt fragmented — too many tools, not enough cohesion. They unified everything into one intelligent ecosystem. Campaign triggers, abandoned cart flows, segmentation — all automated with precision.",
-  },
-};
-
-// 2 Video Highlight Cards
-const VIDEO_CARDS: Record<string, VideoCardItem> = {
-  "scaling-saas": {
-    id: "scaling-saas",
-    title: "Scaling SaaS Operations with AI Automation",
-    image: "/assets/testimonials/video-1-scaling-saas.png",
-    videoUrl: "https://www.youtube.com/embed/8AHPXm9Y6mI?autoplay=1",
-  },
-  "how-puno": {
-    id: "how-puno",
-    title: "How Puno Automated 80% of Lead Handling",
-    image: "/assets/testimonials/video-2-how-puno.png",
-    videoUrl: "https://www.youtube.com/embed/8AHPXm9Y6mI?autoplay=1",
-  },
-};
+const TESTIMONIALS = TESTIMONIALS_DATA.testimonials;
+const VIDEO_CARDS = TESTIMONIALS_DATA.videoCards;
 
 function TestimonialCard({ item }: { item: TestimonialItem }) {
   return (
@@ -390,8 +304,7 @@ export default function TestimonialsSection() {
       sx={{
         position: "relative",
         zIndex: 1,
-        pt: { xs: 8, md: 12 },
-        pb: { xs: 10, md: 16 },
+        py: { xs: 6, sm: 8, md: 10 },
         width: "100%",
         display: "flex",
         flexDirection: "column",
@@ -433,7 +346,7 @@ export default function TestimonialsSection() {
               color: "#64748B",
             }}
           >
-            007
+            {TESTIMONIALS_DATA.badgeNumber}
           </Typography>
           <Box
             sx={{
@@ -453,7 +366,7 @@ export default function TestimonialsSection() {
               textTransform: "uppercase",
             }}
           >
-            Testimonial
+            {TESTIMONIALS_DATA.badgeLabel}
           </Typography>
         </Box>
 
@@ -472,7 +385,7 @@ export default function TestimonialsSection() {
             mb: { xs: 6, md: 9 },
           }}
         >
-          What They’re Saying
+          {TESTIMONIALS_DATA.title}
         </Typography>
 
         {/* 3-COLUMN MASONRY BENTO GRID */}

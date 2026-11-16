@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 import { keyframes } from "@emotion/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { INTEGRATIONS_DATA } from "@/assets/Generic-data";
+import { IntegrationItem } from "@/utils/type";
 
 const marqueeL2R = keyframes`
   0% {
@@ -30,24 +32,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-interface IntegrationItem {
-  id: string;
-  name: string;
-  icon: string;
-}
-
-const INTEGRATIONS: IntegrationItem[] = [
-  { id: "openai", name: "OpenAI", icon: "/assets/integrations/openai.png" },
-  { id: "cloud-ai", name: "Cloud AI", icon: "/assets/integrations/cloud-ai.png" },
-  { id: "make", name: "Make", icon: "/assets/integrations/make.png" },
-  { id: "custom-apis", name: "Custom APIs", icon: "/assets/integrations/custom-apis.png" },
-  { id: "hubspot", name: "HubSpot", icon: "/assets/integrations/hubspot.png" },
-  { id: "salesforce", name: "Salesforce", icon: "/assets/integrations/salesforce.png" },
-  { id: "zoho", name: "Zoho", icon: "/assets/integrations/zoho.png" },
-  { id: "mailchimp", name: "Mailchimp", icon: "/assets/integrations/mailchimp.png" },
-  { id: "activecampaign", name: "ActiveCampaign", icon: "/assets/integrations/activecampaign.png" },
-  { id: "zapier", name: "Zapier", icon: "/assets/integrations/zapier.png" },
-];
+const INTEGRATIONS = INTEGRATIONS_DATA.items;
 
 // Row offsets to create visual diversity across rows
 const ROW_1_ITEMS = [...INTEGRATIONS, ...INTEGRATIONS, ...INTEGRATIONS];
@@ -72,12 +57,12 @@ function PillCard({ item }: { item: IntegrationItem }) {
   return (
     <Box
       sx={{
-        width: { xs: 170, md: 240 },
-        height: { xs: 68, md: 88 },
+        width: { xs: 170, sm: 200, md: 240 },
+        height: { xs: 68, sm: 78, md: 88 },
         flexShrink: 0,
         bgcolor: "#F2F2F2",
         border: "1px solid #E6E6E6",
-        borderRadius: { xs: "20px", md: "32px" },
+        borderRadius: { xs: "20px", sm: "26px", md: "32px" },
         boxShadow:
           "inset 0px 0px 1px 2px #FFFFFF, inset 0px -2px 2px 0px rgba(0, 0, 0, 0.12)",
         display: "flex",
@@ -94,19 +79,35 @@ function PillCard({ item }: { item: IntegrationItem }) {
         },
       }}
     >
-      {/* Tool / Integration Name */}
-      <Typography
-        sx={{
-          fontFamily: "var(--font-outfit), sans-serif",
-          fontSize: { xs: "0.85rem", md: "0.98rem" },
-          fontWeight: 500,
-          color: "#525252",
-          letterSpacing: "-0.015em",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {item.name}
-      </Typography>
+      {/* Tool / Integration Name + Category */}
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}>
+        <Typography
+          sx={{
+            fontFamily: "var(--font-outfit), sans-serif",
+            fontSize: { xs: "0.85rem", md: "0.95rem" },
+            fontWeight: 600,
+            color: "#1E293B",
+            letterSpacing: "-0.015em",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {item.name}
+        </Typography>
+        {item.category && (
+          <Typography
+            sx={{
+              fontFamily: "var(--font-outfit), sans-serif",
+              fontSize: { xs: "0.68rem", md: "0.74rem" },
+              fontWeight: 500,
+              color: "#64748B",
+              letterSpacing: "0.01em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {item.category}
+          </Typography>
+        )}
+      </Box>
 
       {/* Tool Logo */}
       <Box
@@ -164,8 +165,7 @@ export default function TechnologyEcosystemSection() {
       sx={{
         position: "relative",
         zIndex: 1,
-        pt: { xs: 8, md: 12 },
-        pb: { xs: 10, md: 16 },
+        py: { xs: 6, sm: 8, md: 10 },
         width: "100%",
         overflowX: "hidden",
         display: "flex",
@@ -209,7 +209,7 @@ export default function TechnologyEcosystemSection() {
               color: "#64748B",
             }}
           >
-            006
+            {INTEGRATIONS_DATA.badgeNumber}
           </Typography>
           <Box
             sx={{
@@ -229,7 +229,7 @@ export default function TechnologyEcosystemSection() {
               textTransform: "uppercase",
             }}
           >
-            Integrations
+            {INTEGRATIONS_DATA.badgeLabel}
           </Typography>
         </Box>
 
@@ -247,7 +247,7 @@ export default function TechnologyEcosystemSection() {
             lineHeight: 1.15,
           }}
         >
-          Technology Ecosystem
+          {INTEGRATIONS_DATA.title}
         </Typography>
       </Container>
 
@@ -342,8 +342,8 @@ export default function TechnologyEcosystemSection() {
           <Box
             sx={{
               position: "absolute",
-              width: { xs: 190, md: 240 },
-              height: { xs: 190, md: 240 },
+              width: { xs: 190, sm: 220, md: 240 },
+              height: { xs: 190, sm: 220, md: 240 },
               borderRadius: "50%",
               background:
                 "radial-gradient(50% 50% at 50% 50%, #8399ff 0%, rgb(179, 225, 255) 25%, rgb(255, 204, 253) 70%, rgb(253, 255, 188) 100%)",
@@ -361,8 +361,8 @@ export default function TechnologyEcosystemSection() {
             sx={{
               position: "relative",
               zIndex: 1,
-              width: { xs: 140, md: 180 },
-              height: { xs: 140, md: 180 },
+              width: { xs: 140, sm: 160, md: 180 },
+              height: { xs: 140, sm: 160, md: 180 },
               borderRadius: "50%",
               background:
                 "linear-gradient(180deg, #1A1A1A 0%, rgb(82, 82, 82) 100%)",
@@ -431,9 +431,9 @@ export default function TechnologyEcosystemSection() {
         <Typography
           sx={{
             fontFamily: "var(--font-outfit), sans-serif",
-            fontSize: { xs: "0.92rem", sm: "1rem", md: "1.05rem" },
-            lineHeight: 1.5,
-            color: "#525252",
+            fontSize: { xs: "0.95rem", sm: "1.05rem", md: "1.12rem" },
+            lineHeight: 1.55,
+            color: "#64748B",
             textAlign: "center",
             maxWidth: 620,
             letterSpacing: "-0.01em",

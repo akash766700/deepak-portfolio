@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { FOOTER_DATA } from "@/assets/Generic-data";
 
 export default function FooterSection() {
   const [formData, setFormData] = useState({
@@ -33,8 +34,7 @@ export default function FooterSection() {
         width: "100%",
         overflow: "hidden",
         bgcolor: "transparent",
-        pt: { xs: 8, sm: 10, md: 14 },
-        pb: { xs: 5, sm: 6, md: 8 },
+        py: { xs: 6, sm: 8, md: 10 },
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -159,7 +159,7 @@ export default function FooterSection() {
           >
             <Box
               component="img"
-              src="/assets/footer/card-emblem.png"
+              src={FOOTER_DATA.emblemImage}
               alt="Conicorn Emblem"
               sx={{
                 width: "100%",
@@ -174,7 +174,7 @@ export default function FooterSection() {
           <Typography
             variant="h2"
             sx={{
-              fontFamily: "var(--font-commissioner), Inter, sans-serif",
+              fontFamily: "var(--font-outfit), sans-serif",
               fontSize: { xs: "24px", sm: "30px", md: "38px" },
               fontWeight: 700,
               letterSpacing: "-0.02em",
@@ -184,24 +184,24 @@ export default function FooterSection() {
               mb: 1.5,
             }}
           >
-            Your Competitors Are Automating.
+            {FOOTER_DATA.titleLine1}
             <br />
-            Are you?
+            {FOOTER_DATA.titleLine2}
           </Typography>
 
           {/* Subtitle */}
           <Typography
             sx={{
-              fontFamily: "Inter, sans-serif",
+              fontFamily: "var(--font-outfit), sans-serif",
               fontSize: { xs: "13.5px", sm: "14.5px", md: "15px" },
               color: "rgba(255, 255, 255, 0.72)",
               textAlign: "center",
               lineHeight: 1.5,
-              maxWidth: "460px",
+              maxWidth: "520px",
               mb: 4,
             }}
           >
-            Stop wasting time on manual processes. Start building a 24/7 earning business.
+            {FOOTER_DATA.subtitle}
           </Typography>
 
           {/* Contact Form */}
@@ -220,7 +220,7 @@ export default function FooterSection() {
               component="input"
               type="text"
               required
-              placeholder="Your name*"
+              placeholder={FOOTER_DATA.form.namePlaceholder}
               value={formData.name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormData({ ...formData, name: e.target.value })
@@ -253,7 +253,7 @@ export default function FooterSection() {
               component="input"
               type="text"
               required
-              placeholder="Your company name*"
+              placeholder={FOOTER_DATA.form.companyPlaceholder}
               value={formData.company}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormData({ ...formData, company: e.target.value })
@@ -286,7 +286,7 @@ export default function FooterSection() {
               component="input"
               type="email"
               required
-              placeholder="Your business email*"
+              placeholder={FOOTER_DATA.form.emailPlaceholder}
               value={formData.email}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormData({ ...formData, email: e.target.value })
@@ -319,7 +319,7 @@ export default function FooterSection() {
               component="textarea"
               required
               rows={4}
-              placeholder="Share project details*"
+              placeholder={FOOTER_DATA.form.detailsPlaceholder}
               value={formData.details}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setFormData({ ...formData, details: e.target.value })
@@ -374,7 +374,7 @@ export default function FooterSection() {
                   },
                 }}
               >
-                {submitted ? "Request Sent! ✓" : "Send Your Request!"}
+                {submitted ? FOOTER_DATA.form.submittedButtonText : FOOTER_DATA.form.submitButtonText}
               </Button>
             </Box>
           </Box>
@@ -553,7 +553,7 @@ export default function FooterSection() {
               textAlign: { xs: "center", sm: "left" },
             }}
           >
-            © Deepak Gupta 2026 | Built with Precision
+            {FOOTER_DATA.copyright}
           </Typography>
 
           {/* Creator Credit */}

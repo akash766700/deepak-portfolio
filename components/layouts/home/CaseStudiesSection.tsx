@@ -7,64 +7,13 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { CASE_STUDIES_DATA } from "@/assets/Generic-data";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-interface CaseStudySlide {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  imageAlt: string;
-  stats: {
-    value: string;
-    label: string;
-  }[];
-}
-
-const CASE_STUDIES: CaseStudySlide[] = [
-  {
-    id: "real-estate",
-    title: "AI Property Inquiry Chatbot for Real Estate Firms",
-    description:
-      "An intelligent chatbot that qualifies property inquiries, answers buyer questions, and schedules viewings.",
-    image: "/assets/case-studies/case-1-real-estate.png",
-    imageAlt: "AI Property Inquiry Chatbot Visual",
-    stats: [
-      { value: "3x", label: "Lead Response" },
-      { value: "+40%", label: "View Bookings" },
-      { value: "24/7", label: "Engagement" },
-    ],
-  },
-  {
-    id: "creative-teams",
-    title: "AI Project Management Automation for Creative Teams",
-    description:
-      "Streamlining project coordination and task assignments for faster delivery and smoother collaboration.",
-    image: "/assets/case-studies/case-2-creative-teams.png",
-    imageAlt: "AI Project Management Visual",
-    stats: [
-      { value: "+38%", label: "Faster Delivery" },
-      { value: "-62%", label: "Admin Work" },
-      { value: "4x", label: "Productivity" },
-    ],
-  },
-  {
-    id: "finance-saas",
-    title: "AI Workflow Automation for Finance SaaS Company",
-    description:
-      "We analyze real estate workflows, identify operational bottlenecks, and uncover revenue opportunities.",
-    image: "/assets/case-studies/case-3-finance-saas.png",
-    imageAlt: "AI Workflow Automation Visual",
-    stats: [
-      { value: "+40%", label: "Demo Booking" },
-      { value: "+25%", label: "Closing Rate" },
-      { value: "3x", label: "Engagement" },
-    ],
-  },
-];
+const CASE_STUDIES = CASE_STUDIES_DATA.studies;
 
 export default function CaseStudiesSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -151,8 +100,7 @@ export default function CaseStudiesSection() {
       sx={{
         position: "relative",
         zIndex: 1,
-        pt: { xs: 4, sm: 6, md: 8 },
-        pb: { xs: 8, md: 14 },
+        py: { xs: 6, sm: 8, md: 10 },
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -193,7 +141,7 @@ export default function CaseStudiesSection() {
               color: "#64748B",
             }}
           >
-            005
+            {CASE_STUDIES_DATA.badgeNumber}
           </Typography>
           <Box
             sx={{
@@ -213,7 +161,7 @@ export default function CaseStudiesSection() {
               textTransform: "uppercase",
             }}
           >
-            Case Studies
+            {CASE_STUDIES_DATA.badgeLabel}
           </Typography>
         </Box>
 
@@ -232,7 +180,7 @@ export default function CaseStudiesSection() {
             lineHeight: 1.15,
           }}
         >
-          What We’ve Built
+          {CASE_STUDIES_DATA.title}
         </Typography>
 
         {/* Outer Slider Container with Floating Navigation Arrows */}
@@ -321,8 +269,8 @@ export default function CaseStudiesSection() {
               minHeight: 500,
               bgcolor: "#F2F2F2",
               borderRadius: {
-                xs: "80px",
-                sm: "140px",
+                xs: "40px",
+                sm: "64px",
                 md: "128px",
               },
               p: "8px",
@@ -347,12 +295,12 @@ export default function CaseStudiesSection() {
               ref={slideImageRef}
               sx={{
                 width: { xs: "100%", md: 484 },
-                height: { xs: 320, sm: 400, md: 484 },
+                height: { xs: 240, sm: 340, md: 484 },
                 flexShrink: 0,
                 bgcolor: "#000000",
                 borderRadius: {
-                  xs: "72px",
-                  sm: "132px",
+                  xs: "32px",
+                  sm: "56px",
                   md: "120px",
                 },
                 position: "relative",
@@ -386,8 +334,8 @@ export default function CaseStudiesSection() {
                   inset: 0,
                   pointerEvents: "none",
                   borderRadius: {
-                    xs: "72px",
-                    sm: "132px",
+                    xs: "32px",
+                    sm: "56px",
                     md: "120px",
                   },
                   boxShadow:
@@ -515,8 +463,8 @@ export default function CaseStudiesSection() {
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "flex-end",
-                  gap: { xs: 2, sm: 3, md: 4 },
-                  pt: { xs: 4, md: 0 },
+                  gap: { xs: 1.5, sm: 3, md: 4 },
+                  pt: { xs: 3, sm: 4, md: 0 },
                   borderTop: { xs: "1px solid rgba(0, 0, 0, 0.06)", md: "none" },
                 }}
               >
@@ -533,7 +481,7 @@ export default function CaseStudiesSection() {
                     <Typography
                       sx={{
                         fontFamily: "var(--font-outfit), sans-serif",
-                        fontSize: { xs: "1.45rem", sm: "1.75rem", md: "2rem" },
+                        fontSize: { xs: "1.3rem", sm: "1.75rem", md: "2rem" },
                         fontWeight: 600,
                         letterSpacing: "-0.03em",
                         lineHeight: 1.1,
@@ -545,7 +493,7 @@ export default function CaseStudiesSection() {
                     <Typography
                       sx={{
                         fontFamily: "var(--font-outfit), sans-serif",
-                        fontSize: { xs: "0.78rem", sm: "0.85rem", md: "0.9rem" },
+                        fontSize: { xs: "0.74rem", sm: "0.85rem", md: "0.9rem" },
                         color: "#64748B",
                         lineHeight: 1.3,
                         letterSpacing: "-0.01em",

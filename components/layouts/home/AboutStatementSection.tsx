@@ -8,26 +8,13 @@ import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ABOUT_STATEMENT_DATA } from "@/assets/Generic-data";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-// Statement tailored for Deepak Gupta's Financial & IT Automation Expertise
-const STATEMENT_TEXT =
-  "Backed by 10+ years of financial leadership, I blend rigorous statutory accounting with intelligent IT automation — turning complex numbers into streamlined, audit-ready growth.";
-
-// Words array for word-by-word scroll reveal
-const WORDS = STATEMENT_TEXT.split(" ");
-
-// Alternating metrics matching the exact Conicom Framer layout
-const MARQUEE_METRICS = [
-  { value: "10+", label: "YEARS EXPERIENCE" },
-  { value: "100%", label: "AUDIT COMPLIANCE" },
-  { value: "5X", label: "FASTER MIS REPORTING" },
-  { value: "80%", label: "PRODUCTIVITY BOOST" },
-  { value: "0%", label: "RECONCILIATION ERROR" },
-];
+const WORDS = ABOUT_STATEMENT_DATA.statement.split(" ");
 
 export default function AboutStatementSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -100,13 +87,14 @@ export default function AboutStatementSection() {
       sx={{
         position: "relative",
         width: "100%",
-        minHeight: "100vh",
+        minHeight: "auto",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         bgcolor: "transparent",
-        py: { xs: 8, sm: 10, md: 14 },
+        pt: { xs: 8, sm: 10, md: 12 },
+        pb: { xs: 6, sm: 8, md: 10 },
         overflow: "hidden",
       }}
     >
@@ -148,7 +136,7 @@ export default function AboutStatementSection() {
               color: "#64748B",
             }}
           >
-            001
+            {ABOUT_STATEMENT_DATA.badgeNumber}
           </Typography>
           <Box
             sx={{
@@ -168,7 +156,7 @@ export default function AboutStatementSection() {
               textTransform: "uppercase",
             }}
           >
-            WHO I AM
+            {ABOUT_STATEMENT_DATA.badgeLabel}
           </Typography>
         </Box>
 
@@ -257,10 +245,10 @@ export default function AboutStatementSection() {
         >
           {/* Repeat list twice for seamless infinite looping */}
           {[
-            ...MARQUEE_METRICS,
-            ...MARQUEE_METRICS,
-            ...MARQUEE_METRICS,
-            ...MARQUEE_METRICS,
+            ...ABOUT_STATEMENT_DATA.marqueeMetrics,
+            ...ABOUT_STATEMENT_DATA.marqueeMetrics,
+            ...ABOUT_STATEMENT_DATA.marqueeMetrics,
+            ...ABOUT_STATEMENT_DATA.marqueeMetrics,
           ].map((item, index) => (
             <Box
               key={index}

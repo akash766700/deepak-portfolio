@@ -6,13 +6,13 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { CAPABILITIES_DATA } from "@/assets/Generic-data";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const SECTION_TITLE = "Our Financial & Automation Services";
-const WORDS = SECTION_TITLE.split(" ");
+const WORDS = CAPABILITIES_DATA.title.split(" ");
 
 export default function CapabilitiesSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -88,7 +88,7 @@ export default function CapabilitiesSection() {
       sx={{
         position: "relative",
         width: "100%",
-        py: { xs: 10, sm: 12, md: 16 },
+        py: { xs: 6, sm: 8, md: 10 },
         bgcolor: "transparent",
         display: "flex",
         flexDirection: "column",
@@ -133,7 +133,7 @@ export default function CapabilitiesSection() {
               color: "#64748B",
             }}
           >
-            003
+            {CAPABILITIES_DATA.badgeNumber}
           </Typography>
           <Box
             sx={{
@@ -153,7 +153,7 @@ export default function CapabilitiesSection() {
               textTransform: "uppercase",
             }}
           >
-            CAPABILITIES
+            {CAPABILITIES_DATA.badgeLabel}
           </Typography>
         </Box>
 
@@ -251,18 +251,14 @@ export default function CapabilitiesSection() {
                 }}
               >
                 <strong style={{ color: "#0F172A", fontWeight: 700 }}>
-                  Automated Financial & ERP Workflows.{" "}
+                  {CAPABILITIES_DATA.card1.title}{" "}
                 </strong>
-                Streamline multi-tier financial operations across manufacturing, retail, and institutions using intelligent Tally Prime & ERP logic.
+                {CAPABILITIES_DATA.card1.description}
               </Typography>
 
               {/* Checklist */}
               <Box sx={{ display: "flex", flexDirection: "column", gap: 0.75, mb: 3 }}>
-                {[
-                  "End-to-end ledger mapping & auto-vouchering",
-                  "Real-time Tally Prime & ERP 9 integration",
-                  "100% audit-validated statutory reporting",
-                ].map((item, i) => (
+                {CAPABILITIES_DATA.card1.checklist.map((item, i) => (
                   <Box key={i} sx={{ display: "flex", alignItems: "center", gap: 1.1 }}>
                     <Box
                       component="span"
@@ -480,9 +476,9 @@ export default function CapabilitiesSection() {
               }}
             >
               <strong style={{ color: "#0F172A", fontWeight: 700 }}>
-                Real-Time Advisory & Support.{" "}
+                {CAPABILITIES_DATA.card2.title}{" "}
               </strong>
-              24/7 financial compliance triggers, GST deadline guidance, and instant statutory query resolution.
+              {CAPABILITIES_DATA.card2.description}
             </Typography>
 
             {/* Chat Floating Bubbles directly on card */}
@@ -642,9 +638,9 @@ export default function CapabilitiesSection() {
               }}
             >
               <strong style={{ color: "#0F172A", fontWeight: 700 }}>
-                Multi-Enterprise Ledger &amp; AP/AR.{" "}
+                {CAPABILITIES_DATA.card3.title}{" "}
               </strong>
-              Proven financial leadership across manufacturing, retail enterprise, and institutional non-profit organizations.
+              {CAPABILITIES_DATA.card3.description}
             </Typography>
 
             {/* Profile Stack Visual */}
@@ -823,9 +819,9 @@ export default function CapabilitiesSection() {
               }}
             >
               <strong style={{ color: "#0F172A", fontWeight: 700 }}>
-                Automated MIS & Financial Dashboards.{" "}
+                {CAPABILITIES_DATA.card4.title}{" "}
               </strong>
-              Automated dashboards, business intelligence, and performance forecasting.
+              {CAPABILITIES_DATA.card4.description}
             </Typography>
 
             {/* Mountain Area Chart Visual Panel */}
@@ -942,9 +938,9 @@ export default function CapabilitiesSection() {
               }}
             >
               <strong style={{ color: "#0F172A", fontWeight: 700 }}>
-                Automated Statutory Alerts.{" "}
+                {CAPABILITIES_DATA.card5.title}{" "}
               </strong>
-              24/7 financial compliance triggers, GST deadline alerts, and reconciliation logs.
+              {CAPABILITIES_DATA.card5.description}
             </Typography>
 
             {/* Radar Wave Graphic Panel */}
@@ -1167,7 +1163,7 @@ export default function CapabilitiesSection() {
                   mb: 2.4,
                 }}
               >
-                Connect directly with Deepak Gupta. 10+ years optimizing multi-crore balance sheets, statutory tax compliance, and automated accounting workflows.
+                {CAPABILITIES_DATA.card6.description}
               </Typography>
             </Box>
 
@@ -1197,7 +1193,7 @@ export default function CapabilitiesSection() {
                 },
               }}
             >
-              Schedule a Consultation
+              {CAPABILITIES_DATA.card6.ctaText}
               <Box
                 component="span"
                 sx={{
@@ -1250,7 +1246,7 @@ export default function CapabilitiesSection() {
                 mb: { xs: 2.2, md: 2.8 },
               }}
             >
-              Institutional Financial Rigor &amp; Compliance.
+              {CAPABILITIES_DATA.card7.title}
             </Typography>
 
             {/* 4 Metallic Badge Squircles in exact gradient & 3D button plates */}

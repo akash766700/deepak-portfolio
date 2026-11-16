@@ -6,34 +6,13 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { WHY_CHOOSE_DATA } from "@/assets/Generic-data";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const SECTION_TITLE = "Why Choose Me?";
-const WORDS = SECTION_TITLE.split(" ");
-
-const CARDS_DATA = [
-  {
-    step: "01",
-    title: "Audit-Ready Financial Rigor",
-    description: "100% statutory compliance, flawless GST & TDS filings, and zero-error ledger reconciliation.",
-    icon: "star",
-  },
-  {
-    step: "02",
-    title: "Finance + IT Automation",
-    description: "Rare dual M.Com & MCA edge delivering automated MIS pipelines, 5x faster reporting, and ERP workflows.",
-    icon: "rocket",
-  },
-  {
-    step: "03",
-    title: "10+ Years Proven Leadership",
-    description: "Battle-tested accounting across manufacturing (Summercool), retail (Bajaj), and trusts (Paavan Ashram).",
-    icon: "modular",
-  },
-];
+const WORDS = WHY_CHOOSE_DATA.title.split(" ");
 
 export default function WhyChooseSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -109,7 +88,7 @@ export default function WhyChooseSection() {
       sx={{
         position: "relative",
         width: "100%",
-        py: { xs: 10, sm: 12, md: 16 },
+        py: { xs: 6, sm: 8, md: 10 },
         bgcolor: "transparent",
         display: "flex",
         flexDirection: "column",
@@ -154,7 +133,7 @@ export default function WhyChooseSection() {
               color: "#64748B",
             }}
           >
-            002
+            {WHY_CHOOSE_DATA.badgeNumber}
           </Typography>
           <Box
             sx={{
@@ -174,7 +153,7 @@ export default function WhyChooseSection() {
               textTransform: "uppercase",
             }}
           >
-            VALUE
+            {WHY_CHOOSE_DATA.badgeLabel}
           </Typography>
         </Box>
 
@@ -247,7 +226,7 @@ export default function WhyChooseSection() {
             margin: "0 auto",
           }}
         >
-          {CARDS_DATA.map((card, idx) => (
+          {WHY_CHOOSE_DATA.cards.map((card, idx) => (
             <Box
               key={idx}
               className="exact-card-shell"

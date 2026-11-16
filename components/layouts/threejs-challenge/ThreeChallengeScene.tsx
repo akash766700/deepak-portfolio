@@ -317,14 +317,26 @@ export default function ThreeChallengeScene({ sx }: ThreeChallengeSceneProps = {
 
       camera.aspect = width / height;
 
-      // On desktop, project the ball cleanly onto the right side (NO card/box, free floating)
-      if (width >= 960) {
+      // On desktop (width >= 1200), project the ball cleanly onto the right side (exact original)
+      if (width >= 1200) {
         camera.setViewOffset(width, height, -width * 0.28, 0, width, height);
-      } else if (width >= 768) {
-        camera.setViewOffset(width, height, -width * 0.16, 0, width, height);
-      } else {
+        camera.position.set(0, 0, 6.7);
+      } 
+      // On tablet (600 <= width < 1200), scale and position dynamically so ball is NEVER cropped and NEVER overlaps text
+      else if (width >= 600) {
+        const aspect = width / height;
+        // In portrait/square tablet, increase camera distance proportionally so ball scales cleanly to right half
+        const targetZ = Math.max(7.2, Math.min(10.8, 6.7 * (1.32 / Math.min(aspect, 1.25))));
+        const targetOffset = -width * 0.22;
+        camera.setViewOffset(width, height, targetOffset, 0, width, height);
+        camera.position.set(0, 0, targetZ);
+      } 
+      // On mobile (width < 600), ball is centered below the text
+      else {
         camera.clearViewOffset();
+        camera.position.set(0, 0, 3.95);
       }
+      controls.update();
       camera.updateProjectionMatrix();
 
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));

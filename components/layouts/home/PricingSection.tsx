@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { PRICING_DATA } from "@/assets/Generic-data";
 
 export default function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(false);
@@ -16,8 +17,7 @@ export default function PricingSection() {
       sx={{
         position: "relative",
         zIndex: 1,
-        pt: { xs: 8, md: 10 },
-        pb: { xs: 10, md: 14 },
+        py: { xs: 6, sm: 8, md: 10 },
         width: "100%",
         display: "flex",
         flexDirection: "column",
@@ -59,7 +59,7 @@ export default function PricingSection() {
               color: "#64748B",
             }}
           >
-            008
+            {PRICING_DATA.badgeNumber}
           </Typography>
           <Box
             sx={{
@@ -79,7 +79,7 @@ export default function PricingSection() {
               textTransform: "uppercase",
             }}
           >
-            PRICING
+            {PRICING_DATA.badgeLabel}
           </Typography>
         </Box>
 
@@ -88,35 +88,35 @@ export default function PricingSection() {
           variant="h2"
           component="h2"
           sx={{
-            fontFamily: "var(--font-commissioner), Inter, sans-serif",
-            fontSize: { xs: "32px", sm: "42px", md: "52px" },
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
+            fontFamily: "var(--font-outfit), sans-serif",
+            fontSize: { xs: "2rem", sm: "2.75rem", md: "3.25rem" },
+            fontWeight: 600,
+            letterSpacing: "-0.04em",
             color: "#1A1A1A",
             textAlign: "center",
             lineHeight: 1.15,
             mb: 1.5,
           }}
         >
-          Built for Growth at Every Stage
+          {PRICING_DATA.title}
         </Typography>
 
         {/* Subtitle */}
         <Typography
           sx={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: { xs: "15px", sm: "16px", md: "17px" },
-            color: "#525252",
+            fontFamily: "var(--font-outfit), sans-serif",
+            fontSize: { xs: "0.95rem", sm: "1.05rem", md: "1.12rem" },
+            color: "#64748B",
             textAlign: "center",
-            maxWidth: "600px",
+            maxWidth: "680px",
             lineHeight: 1.55,
             mb: { xs: 4, md: 5 },
           }}
         >
-          Whether you’re starting small or scaling fast, we have an automation plan that fits.
+          {PRICING_DATA.subtitle}
         </Typography>
 
-        {/* Billing Switcher Toggle: MONTHLY vs ANNUALLY (SAVE 10%) */}
+        {/* Billing Switcher Toggle: MONTHLY vs ANNUALLY */}
         <Box
           onClick={() => setIsAnnual(!isAnnual)}
           sx={{
@@ -140,7 +140,7 @@ export default function PricingSection() {
               transition: "color 0.25s ease",
             }}
           >
-            MONTHLY
+            {PRICING_DATA.monthlyLabel}
           </Typography>
 
           {/* Pill Track & Knob */}
@@ -180,7 +180,7 @@ export default function PricingSection() {
               transition: "color 0.25s ease",
             }}
           >
-            ANNUALLY (SAVE 10%)
+            {PRICING_DATA.annualLabel}
           </Typography>
         </Box>
 
@@ -261,7 +261,7 @@ export default function PricingSection() {
                   mb: 1,
                 }}
               >
-                Starter Automation
+                {PRICING_DATA.plan1.title}
               </Typography>
               <Typography
                 sx={{
@@ -271,7 +271,7 @@ export default function PricingSection() {
                   lineHeight: 1.5,
                 }}
               >
-                For small teams beginning their journey
+                {PRICING_DATA.plan1.subtitle}
               </Typography>
 
               {/* Divider Line */}
@@ -296,22 +296,13 @@ export default function PricingSection() {
                   component="span"
                   sx={{
                     fontFamily: "Inter, sans-serif",
-                    fontSize: { xs: "36px", md: "44px" },
+                    fontSize: { xs: "32px", md: "40px" },
                     fontWeight: 700,
                     letterSpacing: "-0.03em",
                     color: "#1A1A1A",
                   }}
                 >
-                  {isAnnual ? "$399." : "$499."}
-                  <Box
-                    component="span"
-                    sx={{
-                      color: "#A5A5A5",
-                      fontWeight: 700,
-                    }}
-                  >
-                    00
-                  </Box>
+                  {isAnnual ? PRICING_DATA.plan1.priceAnnual : PRICING_DATA.plan1.priceMonthly}
                 </Typography>
                 <Typography
                   component="span"
@@ -323,7 +314,7 @@ export default function PricingSection() {
                     ml: 1,
                   }}
                 >
-                  /Month
+                  {isAnnual ? PRICING_DATA.plan1.periodAnnual : PRICING_DATA.plan1.periodMonthly}
                 </Typography>
               </Box>
             </Box>
@@ -339,16 +330,12 @@ export default function PricingSection() {
                   mb: 2,
                 }}
               >
-                What’s included:
+                {PRICING_DATA.plan1.featuresLabel}
               </Typography>
 
               {/* Feature Items List */}
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.75 }}>
-                {[
-                  "Workflow setup (1–3 systems)",
-                  "Basic AI chatbot",
-                  "CRM integration",
-                ].map((feature, idx) => (
+                {PRICING_DATA.plan1.features.map((feature, idx) => (
                   <Box
                     key={idx}
                     sx={{
@@ -382,6 +369,8 @@ export default function PricingSection() {
 
               {/* CTA Button */}
               <Button
+                component="a"
+                href="#contact"
                 fullWidth
                 sx={{
                   mt: 4,
@@ -402,7 +391,7 @@ export default function PricingSection() {
                   },
                 }}
               >
-                Get Starter Package
+                {PRICING_DATA.plan1.ctaText}
               </Button>
             </Box>
           </Box>
@@ -492,7 +481,7 @@ export default function PricingSection() {
                   mb: 1,
                 }}
               >
-                Growth Automation
+                {PRICING_DATA.plan2.title}
               </Typography>
               <Typography
                 sx={{
@@ -502,7 +491,7 @@ export default function PricingSection() {
                   lineHeight: 1.5,
                 }}
               >
-                For scaling businesses
+                {PRICING_DATA.plan2.subtitle}
               </Typography>
 
               {/* Divider Line */}
@@ -527,22 +516,13 @@ export default function PricingSection() {
                   component="span"
                   sx={{
                     fontFamily: "Inter, sans-serif",
-                    fontSize: { xs: "36px", md: "44px" },
+                    fontSize: { xs: "32px", md: "40px" },
                     fontWeight: 700,
                     letterSpacing: "-0.03em",
                     color: "#1A1A1A",
                   }}
                 >
-                  {isAnnual ? "$1099." : "$1199."}
-                  <Box
-                    component="span"
-                    sx={{
-                      color: "#A5A5A5",
-                      fontWeight: 700,
-                    }}
-                  >
-                    00
-                  </Box>
+                  {isAnnual ? PRICING_DATA.plan2.priceAnnual : PRICING_DATA.plan2.priceMonthly}
                 </Typography>
                 <Typography
                   component="span"
@@ -554,7 +534,7 @@ export default function PricingSection() {
                     ml: 1,
                   }}
                 >
-                  /Month
+                  {isAnnual ? PRICING_DATA.plan2.periodAnnual : PRICING_DATA.plan2.periodMonthly}
                 </Typography>
               </Box>
             </Box>
@@ -570,17 +550,12 @@ export default function PricingSection() {
                   mb: 2,
                 }}
               >
-                Included everything in Starter, plus:
+                {PRICING_DATA.plan2.featuresLabel}
               </Typography>
 
               {/* Feature Items List */}
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.75 }}>
-                {[
-                  "Advanced workflow automation",
-                  "Multi-channel AI chatbot",
-                  "Sales & marketing automation",
-                  "Dashboard & reporting",
-                ].map((feature, idx) => (
+                {PRICING_DATA.plan2.features.map((feature, idx) => (
                   <Box
                     key={idx}
                     sx={{
@@ -614,6 +589,8 @@ export default function PricingSection() {
 
               {/* CTA Button with Iridescent Glow */}
               <Button
+                component="a"
+                href="#contact"
                 fullWidth
                 sx={{
                   mt: 4,
@@ -636,7 +613,7 @@ export default function PricingSection() {
                   },
                 }}
               >
-                Get Growth Package
+                {PRICING_DATA.plan2.ctaText}
               </Button>
             </Box>
           </Box>
@@ -747,7 +724,7 @@ export default function PricingSection() {
               lineHeight: 1.25,
             }}
           >
-            Not sure which plan is right for you?
+            {PRICING_DATA.consultation.title}
           </Typography>
 
           {/* Subtext */}
@@ -756,15 +733,17 @@ export default function PricingSection() {
               fontFamily: "Inter, sans-serif",
               fontSize: { xs: "14px", sm: "15px", md: "16px" },
               color: "#525252",
-              maxWidth: "500px",
+              maxWidth: "540px",
               lineHeight: 1.5,
             }}
           >
-            Book a free 30-minute AI strategy session.
+            {PRICING_DATA.consultation.subtitle}
           </Typography>
 
           {/* CTA Pill Button */}
           <Button
+            component="a"
+            href="#contact"
             sx={{
               height: 52,
               borderRadius: "999px",
@@ -787,7 +766,7 @@ export default function PricingSection() {
               },
             }}
           >
-            Book a Free Consultation →
+            {PRICING_DATA.consultation.buttonText} →
           </Button>
         </Box>
       </Container>

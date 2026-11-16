@@ -47,41 +47,17 @@ export default function HomeLayout() {
           opacity={0.5}
         />
       </Box>
-
-      {/* Floating Island Navbar */}
       <Navbar />
-
-      {/* Hero Section: Left Intro + Right Interactive 3D Ball */}
       <HeroSection />
-
-      {/* Section 02: About Statement with Word-by-Word Scroll Reveal & Video Card */}
       <AboutStatementSection />
-
-      {/* Section 03: Why Choose Me / Value Proposition Cards */}
       <WhyChooseSection />
-
-      {/* Section 04: Capabilities & Services Bento Grid */}
       <CapabilitiesSection />
-
-      {/* Section 05: How We Work Process Stepper Timeline */}
       <ProcessStepperSection />
-
-      {/* Section 06: What We've Built Case Studies Slider */}
       <CaseStudiesSection />
-
-      {/* Section 07: Technology Ecosystem Integrations Marquee */}
       <TechnologyEcosystemSection />
-
-      {/* Section 08: What They’re Saying Testimonials Masonry */}
       <TestimonialsSection />
-
-      {/* Section 09: Built for Growth at Every Stage Pricing */}
       <PricingSection />
-
-      {/* Section 10: Common Questions FAQs */}
       <FAQSection />
-
-      {/* Footer Section: Contact Form, Links & Brand Footer */}
       <FooterSection />
     </Box>
   );
