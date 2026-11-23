@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CASE_STUDIES_DATA } from "@/assets/Generic-data";
+import { attachCard3DTilt } from "@/utils/gsapCardTilt";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -18,24 +19,52 @@ const CASE_STUDIES = CASE_STUDIES_DATA.studies;
 export default function CaseStudiesSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const currentSlideRef = useRef(0);
+  currentSlideRef.current = currentSlide;
+
+  const isAnimatingRef = useRef(false);
+  isAnimatingRef.current = isAnimating;
+
+  const isHoveredRef = useRef(false);
+  isHoveredRef.current = isHovered;
+
   const slideContentRef = useRef<HTMLDivElement | null>(null);
   const slideImageRef = useRef<HTMLDivElement | null>(null);
+  const cardShellRef = useRef<HTMLDivElement | null>(null);
+  const navButtonsRef = useRef<HTMLDivElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
 
-  // GSAP Scroll reveal for heading
+  // Auto-play interval: smooth progression every 4.5s, pauses while hovered
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!isHoveredRef.current && !isAnimatingRef.current) {
+        const nextIdx = (currentSlideRef.current + 1) % CASE_STUDIES.length;
+        goToSlide(nextIdx, 1);
+      }
+    }, 4500);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // GSAP Scroll reveal for heading & cinematic card entrance
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    let cleanupTilt: (() => void) | null = null;
     const ctx = gsap.context(() => {
+      // 1. Headline Tracking Compression & Rise
       if (headlineRef.current) {
         gsap.fromTo(
           headlineRef.current,
-          { opacity: 0, y: 30 },
+          { opacity: 0, y: 45, letterSpacing: "0.05em" },
           {
             opacity: 1,
             y: 0,
-            duration: 0.9,
+            letterSpacing: "-0.035em",
+            duration: 1.0,
             ease: "power3.out",
             scrollTrigger: {
               trigger: headlineRef.current,
@@ -45,35 +74,137 @@ export default function CaseStudiesSection() {
           }
         );
       }
+
+      // 2. Cinematic 3D Card Perspective Rise & Image Focus Zoom
+      if (cardShellRef.current) {
+        gsap.fromTo(
+          cardShellRef.current,
+          {
+            opacity: 0,
+            y: 90,
+            scale: 0.90,
+            rotateX: 12,
+            transformPerspective: 1200,
+            transformOrigin: "center bottom",
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            rotateX: 0,
+            duration: 1.05,
+            ease: "power3.out",
+            force3D: true,
+            scrollTrigger: {
+              trigger: cardShellRef.current,
+              start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+
+        // Ken Burns image scale-in focus
+        if (slideImageRef.current) {
+          gsap.fromTo(
+            slideImageRef.current,
+            { scale: 1.14, opacity: 0.8 },
+            {
+              scale: 1.0,
+              opacity: 1,
+              duration: 1.2,
+              ease: "power2.out",
+              force3D: true,
+              scrollTrigger: {
+                trigger: cardShellRef.current,
+                start: "top 82%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+      }
+
+      // 3. Navigation Arrows Elastic Pop
+      const navButtons = sectionRef.current?.querySelectorAll(".case-nav-btn");
+      if (navButtons && navButtons.length > 0) {
+        gsap.fromTo(
+          navButtons,
+          { scale: 0, opacity: 0 },
+          {
+            scale: 1,
+            opacity: 1,
+            stagger: 0.15,
+            duration: 0.7,
+            ease: "back.out(2.2)",
+            scrollTrigger: {
+              trigger: cardShellRef.current,
+              start: "top 78%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      // 4. Butter-Smooth 120 FPS 3D Cursor Parallax Tilt on Card
+      cleanupTilt = attachCard3DTilt(cardShellRef.current, {
+        maxTilt: 6,
+        maxMove: 10,
+        perspective: 1200,
+        scaleOnHover: 1.01,
+      });
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      cleanupTilt?.();
+      ctx.revert();
+    };
   }, []);
 
-  const goToSlide = (newIndex: number) => {
-    if (isAnimating) return;
+  const goToSlide = (newIndex: number, forcedDir?: 1 | -1) => {
+    if (isAnimatingRef.current) return;
+    if (newIndex === currentSlideRef.current) return;
     setIsAnimating(true);
+    isAnimatingRef.current = true;
+
+    const fromIdx = currentSlideRef.current;
+    const dir = forcedDir !== undefined ? forcedDir : (newIndex > fromIdx ? 1 : -1);
 
     const contentEl = slideContentRef.current;
     const imageEl = slideImageRef.current;
 
-    // Smooth transition
-    gsap.to([contentEl, imageEl], {
+    // Smooth directional slide transition
+    gsap.to(contentEl, {
       opacity: 0,
-      scale: 0.96,
+      x: -30 * dir,
       duration: 0.22,
-      ease: "power2.inOut",
+      ease: "power2.in",
+    });
+
+    gsap.to(imageEl, {
+      opacity: 0,
+      scale: 0.94,
+      duration: 0.22,
+      ease: "power2.in",
       onComplete: () => {
         setCurrentSlide(newIndex);
+        currentSlideRef.current = newIndex;
         gsap.fromTo(
-          [contentEl, imageEl],
-          { opacity: 0, scale: 0.96 },
+          contentEl,
+          { opacity: 0, x: 30 * dir },
+          { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }
+        );
+        gsap.fromTo(
+          imageEl,
+          { opacity: 0, scale: 1.06 },
           {
             opacity: 1,
-            scale: 1,
-            duration: 0.35,
-            ease: "power2.out",
-            onComplete: () => setIsAnimating(false),
+            scale: 1.0,
+            duration: 0.45,
+            ease: "power3.out",
+            onComplete: () => {
+              setIsAnimating(false);
+              isAnimatingRef.current = false;
+            },
           }
         );
       },
@@ -82,12 +213,12 @@ export default function CaseStudiesSection() {
 
   const handlePrev = () => {
     const nextIdx = (currentSlide - 1 + CASE_STUDIES.length) % CASE_STUDIES.length;
-    goToSlide(nextIdx);
+    goToSlide(nextIdx, -1);
   };
 
   const handleNext = () => {
     const nextIdx = (currentSlide + 1) % CASE_STUDIES.length;
-    goToSlide(nextIdx);
+    goToSlide(nextIdx, 1);
   };
 
   const slide = CASE_STUDIES[currentSlide];
@@ -195,6 +326,7 @@ export default function CaseStudiesSection() {
         >
           {/* Desktop Left Nav Button */}
           <IconButton
+            className="case-nav-btn"
             onClick={handlePrev}
             aria-label="Previous Slide"
             sx={{
@@ -229,6 +361,7 @@ export default function CaseStudiesSection() {
 
           {/* Desktop Right Nav Button */}
           <IconButton
+            className="case-nav-btn"
             onClick={handleNext}
             aria-label="Next Slide"
             sx={{
@@ -264,6 +397,9 @@ export default function CaseStudiesSection() {
           {/* EXACT CARD WRAPPER */}
           {/* Framer exact spec: Desktop 128px radius, Tablet 140px, Mobile 80px */}
           <Box
+            ref={cardShellRef}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             sx={{
               width: "100%",
               minHeight: 500,
@@ -282,7 +418,8 @@ export default function CaseStudiesSection() {
               border: "1px solid rgba(0, 0, 0, 0.06)",
               boxShadow:
                 "0 24px 60px -12px rgba(15, 23, 42, 0.12), 0 8px 24px -6px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 0.95)",
-              transition: "box-shadow 0.3s ease, transform 0.3s ease",
+              transition: "box-shadow 0.35s ease, border-color 0.35s ease",
+              willChange: "transform",
               "&:hover": {
                 boxShadow:
                   "0 32px 75px -12px rgba(15, 23, 42, 0.16), 0 12px 30px -6px rgba(15, 23, 42, 0.08), inset 0 1px 2px #FFFFFF",
@@ -353,108 +490,38 @@ export default function CaseStudiesSection() {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                p: { xs: "28px 24px 32px 24px", sm: "36px 40px", md: "40px" },
+                p: { xs: "28px 24px 32px 24px", sm: "36px 40px", md: "44px 44px" },
               }}
             >
-              {/* Top Group: Logo, Title, Description, Read More */}
-              <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2.5, md: 4 } }}>
-                {/* Logoipsum Brand Badge */}
-                <Box
-                  component="img"
-                  src="/assets/case-studies/logoipsum.png"
-                  alt="Logoipsum"
+              {/* Top Group: Title & Description */}
+              <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1.5, sm: 2 } }}>
+                <Typography
+                  component="h3"
                   sx={{
-                    height: 28,
-                    width: "auto",
-                    maxWidth: 190,
-                    objectFit: "contain",
-                    objectPosition: "left",
-                    display: "block",
-                  }}
-                />
-
-                {/* Title & Description */}
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-                  <Typography
-                    component="h3"
-                    sx={{
-                      fontFamily: "var(--font-outfit), sans-serif",
-                      fontSize: { xs: "1.35rem", sm: "1.5rem", md: "1.65rem" },
-                      fontWeight: 600,
-                      letterSpacing: "-0.03em",
-                      lineHeight: 1.25,
-                      color: "#1A1A1A",
-                      maxWidth: 460,
-                    }}
-                  >
-                    {slide.title}
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      fontFamily: "var(--font-outfit), sans-serif",
-                      fontSize: { xs: "0.92rem", md: "0.98rem" },
-                      color: "#525252",
-                      lineHeight: 1.45,
-                      letterSpacing: "-0.015em",
-                      maxWidth: 440,
-                    }}
-                  >
-                    {slide.description}
-                  </Typography>
-                </Box>
-
-                {/* Read More Pill Button */}
-                <Box
-                  component="button"
-                  sx={{
-                    all: "unset",
-                    cursor: "pointer",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 1.25,
-                    width: "fit-content",
-                    color: "#1A1A1A",
-                    fontWeight: 500,
-                    fontSize: "0.92rem",
-                    transition: "opacity 0.2s ease, transform 0.2s ease",
-                    "&:hover": {
-                      opacity: 0.8,
-                      transform: "translateX(3px)",
-                    },
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    fontSize: { xs: "1.35rem", sm: "1.55rem", md: "1.75rem" },
+                    fontWeight: 700,
+                    letterSpacing: "-0.03em",
+                    lineHeight: 1.25,
+                    color: "#0F172A",
+                    maxWidth: 480,
                   }}
                 >
-                  <Typography
-                    sx={{
-                      fontFamily: "var(--font-outfit), sans-serif",
-                      fontSize: "0.92rem",
-                      fontWeight: 600,
-                      color: "#1A1A1A",
-                    }}
-                  >
-                    Read More
-                  </Typography>
-                  <Box
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      borderRadius: "50%",
-                      bgcolor: "#9E9E9E",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    <Box
-                      component="svg"
-                      viewBox="0 0 24 24"
-                      sx={{ width: 14, height: 14, fill: "none", stroke: "currentColor", strokeWidth: 2.2 }}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </Box>
-                  </Box>
-                </Box>
+                  {slide.title}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    fontSize: { xs: "0.92rem", sm: "0.96rem", md: "1.02rem" },
+                    color: "#475569",
+                    lineHeight: 1.55,
+                    letterSpacing: "-0.015em",
+                    maxWidth: 460,
+                  }}
+                >
+                  {slide.description}
+                </Typography>
               </Box>
 
               {/* Bottom Metrics Grid */}
@@ -508,22 +575,24 @@ export default function CaseStudiesSection() {
           </Box>
         </Box>
 
-        {/* Mobile/Tablet Navigation Controls below card */}
+        {/* Universal Navigation Indicator & Controls */}
         <Box
           sx={{
-            display: { xs: "flex", md: "none" },
+            display: "flex",
             alignItems: "center",
             justifyContent: "center",
             gap: 2,
-            mt: 3,
+            mt: { xs: 3, md: 3.5 },
           }}
         >
+          {/* Mobile Prev Button */}
           <IconButton
             onClick={handlePrev}
             aria-label="Previous Slide"
             sx={{
-              width: 44,
-              height: 44,
+              display: { xs: "flex", md: "none" },
+              width: 42,
+              height: 42,
               bgcolor: "#1A1A1A",
               color: "#FFFFFF",
               border: "1px solid rgba(255, 255, 255, 0.12)",
@@ -540,30 +609,52 @@ export default function CaseStudiesSection() {
             </Box>
           </IconButton>
 
-          {/* Dots Indicator */}
-          <Box sx={{ display: "flex", gap: 1 }}>
+          {/* Clickable Dots Indicator for ALL devices */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.25,
+              px: 2,
+              py: 0.9,
+              bgcolor: "rgba(255, 255, 255, 0.75)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              borderRadius: "9999px",
+              border: "1px solid rgba(0, 0, 0, 0.08)",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.04)",
+            }}
+          >
             {CASE_STUDIES.map((_, idx) => (
               <Box
                 key={idx}
                 onClick={() => goToSlide(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                role="button"
                 sx={{
-                  width: idx === currentSlide ? 24 : 8,
+                  width: idx === currentSlide ? 28 : 8,
                   height: 8,
                   borderRadius: "9999px",
-                  bgcolor: idx === currentSlide ? "#1A1A1A" : "#CBD5E1",
+                  bgcolor: idx === currentSlide ? "#0F172A" : "#CBD5E1",
                   cursor: "pointer",
-                  transition: "all 0.3s ease",
+                  transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+                  "&:hover": {
+                    bgcolor: idx === currentSlide ? "#0F172A" : "#94A3B8",
+                    transform: "scale(1.15)",
+                  },
                 }}
               />
             ))}
           </Box>
 
+          {/* Mobile Next Button */}
           <IconButton
             onClick={handleNext}
             aria-label="Next Slide"
             sx={{
-              width: 44,
-              height: 44,
+              display: { xs: "flex", md: "none" },
+              width: 42,
+              height: 42,
               bgcolor: "#1A1A1A",
               color: "#FFFFFF",
               border: "1px solid rgba(255, 255, 255, 0.12)",

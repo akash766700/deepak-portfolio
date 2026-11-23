@@ -62,12 +62,13 @@ export default function AboutStatementSection() {
             scale: 1.0,
             y: 0,
             ease: "power1.out",
+            force3D: true,
             transformOrigin: "center center",
             scrollTrigger: {
               trigger: cardRef.current,
               start: "top 95%",
               end: "center 55%",
-              scrub: 1.2,
+              scrub: 0.6,
             },
           },
         );

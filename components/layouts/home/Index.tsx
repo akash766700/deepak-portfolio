@@ -12,7 +12,7 @@ import TechnologyEcosystemSection from "./TechnologyEcosystemSection";
 import TestimonialsSection from "./TestimonialsSection";
 import PricingSection from "./PricingSection";
 import FAQSection from "./FAQSection";
-import FooterSection from "./FooterSection";
+import Footer from "@/components/widgets/Footer";
 
 export default function HomeLayout() {
   return (
@@ -58,7 +58,7 @@ export default function HomeLayout() {
       <TestimonialsSection />
       <PricingSection />
       <FAQSection />
-      <FooterSection />
+      <Footer />
     </Box>
   );
 }

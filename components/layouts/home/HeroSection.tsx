@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import gsap from "gsap";
 import ThreeChallengeScene from "@/components/layouts/threejs-challenge/ThreeChallengeScene";
 import DrawAttentionText from "@/components/widgets/DrawAttentionText";
 import { Caratere } from "@/utils/font";
@@ -30,6 +31,97 @@ export default function HeroSection() {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const heroContentRef = useRef<HTMLDivElement | null>(null);
+
+  // GSAP 3D Kinetic Origami Unfold & Spatial Mouse Parallax Entrance
+  useEffect(() => {
+    if (typeof window === "undefined" || !heroContentRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const greetingEl = heroContentRef.current?.querySelector(".hero-greeting-row");
+      const nameEl = heroContentRef.current?.querySelector(".hero-name-row");
+      const headlineWords = heroContentRef.current?.querySelectorAll(".hero-headline-word");
+      const descLines = heroContentRef.current?.querySelectorAll(".hero-desc-line");
+
+      const tl = gsap.timeline({ delay: 0.2 });
+
+      // 1. Greeting reveal
+      if (greetingEl) {
+        tl.fromTo(
+          greetingEl,
+          { opacity: 0, y: -20, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.8)" }
+        );
+      }
+
+      // 2. Name 3D perspective roll
+      if (nameEl) {
+        tl.fromTo(
+          nameEl,
+          {
+            opacity: 0,
+            y: 40,
+            rotateX: -70,
+            transformPerspective: 800,
+            transformOrigin: "50% 100%",
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            duration: 0.85,
+            ease: "back.out(1.4)",
+            force3D: true,
+          },
+          "-=0.3"
+        );
+      }
+
+      // 3. Headline words 3D cascading roll-up
+      if (headlineWords && headlineWords.length > 0) {
+        tl.fromTo(
+          headlineWords,
+          {
+            opacity: 0,
+            y: 35,
+            rotateX: -55,
+            transformPerspective: 800,
+            transformOrigin: "center bottom",
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            stagger: 0.04,
+            duration: 0.75,
+            ease: "power3.out",
+            force3D: true,
+          },
+          "-=0.4"
+        );
+      }
+
+      // 4. Description lines letter-spacing compression
+      if (descLines && descLines.length > 0) {
+        tl.fromTo(
+          descLines,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.1,
+            duration: 0.7,
+            ease: "power2.out",
+            force3D: true,
+          },
+          "-=0.3"
+        );
+      }
+    }, heroContentRef);
+
+    return () => ctx.revert();
   }, []);
 
   // After drawing & wipe finishes, pause for 2.2s then smoothly cycle to next greeting
@@ -75,6 +167,7 @@ export default function HeroSection() {
         }}
       >
         <Box
+          ref={heroContentRef}
           sx={{
             maxWidth: {
               xs: "100%",
@@ -92,6 +185,7 @@ export default function HeroSection() {
         >
           {/* Row 1: DrawAttention Animated Greeting (Fixed height slot: ZERO vertical shift for content below) */}
           <Box
+            className="hero-greeting-row"
             sx={{
               height: { xs: "50px", sm: "54px", md: "58px", lg: "62px" },
               minHeight: { xs: "50px", sm: "54px", md: "58px", lg: "62px" },
@@ -123,6 +217,7 @@ export default function HeroSection() {
           {/* Row 2: "I'm Deepak Gupta." - Directly below greeting */}
           <Typography
             component="h1"
+            className="hero-name-row"
             sx={{
               fontSize: { xs: "32px", sm: "36px", md: "42px", lg: "58px" },
               fontFamily: "var(--font-outfit), sans-serif",
@@ -177,9 +272,19 @@ export default function HeroSection() {
                 "var(--font-outfit), var(--font-geist-sans), sans-serif",
             }}
           >
-            {HERO_DATA.headlinePrefix}{" "}
+            {HERO_DATA.headlinePrefix.split(" ").map((w, i) => (
+              <Box
+                key={i}
+                component="span"
+                className="hero-headline-word"
+                sx={{ display: "inline-block", mr: "0.28em" }}
+              >
+                {w}
+              </Box>
+            ))}{" "}
             <Box
               component="span"
+              className="hero-headline-word"
               sx={{
                 display: "block",
                 whiteSpace: { xs: "normal", sm: "nowrap" },
@@ -206,8 +311,14 @@ export default function HeroSection() {
             }}
           >
             <Typography
+              className="hero-desc-line"
               sx={{
-                fontSize: { xs: "14.5px", sm: "13.6px", md: "14.5px", lg: "15px" },
+                fontSize: {
+                  xs: "14.5px",
+                  sm: "13.6px",
+                  md: "14.5px",
+                  lg: "15px",
+                },
                 lineHeight: 1.6,
                 color: { xs: "#0F172A", sm: "#475569" },
                 fontFamily: "var(--font-commissioner), sans-serif",
@@ -219,8 +330,14 @@ export default function HeroSection() {
               {HERO_DATA.descriptionLine1}
             </Typography>
             <Typography
+              className="hero-desc-line"
               sx={{
-                fontSize: { xs: "14.5px", sm: "13.6px", md: "14.5px", lg: "15px" },
+                fontSize: {
+                  xs: "14.5px",
+                  sm: "13.6px",
+                  md: "14.5px",
+                  lg: "15px",
+                },
                 lineHeight: 1.6,
                 color: { xs: "#0F172A", sm: "#475569" },
                 fontFamily: "var(--font-commissioner), sans-serif",

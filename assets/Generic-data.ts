@@ -324,8 +324,8 @@ export const CASE_STUDIES_DATA = {
         "Paavan Chintan Dhara Ashram — Trust Accounting & Institutional Audit Compliance",
       description:
         "Spearheaded comprehensive financial accounting, multi-tier bank reconciliations, 100% statutory trust compliances, and automated ERP MIS reporting.",
-      image: "/assets/case-studies/case-1-real-estate.png",
-      imageAlt: "Paavan Chintan Dhara Ashram Financial & Audit Operations",
+      image: "/assets/case-studies/pawanchintandhara.webp",
+      imageAlt: "Paavan Chintan Dhara Ashram Mandir & Institutional Audit Operations",
       stats: [
         { value: "100%", label: "Statutory Compliance" },
         { value: "5x", label: "Faster MIS Delivery" },
@@ -338,8 +338,8 @@ export const CASE_STUDIES_DATA = {
         "Bajaj Electronics — Multi-Channel Retail Accounting & Inventory Valuation",
       description:
         "Managed high-volume retail financial accounts, inventory valuation, payment gateway audits, and vendor ledger pipelines with automated Excel MIS.",
-      image: "/assets/case-studies/case-2-creative-teams.png",
-      imageAlt: "Bajaj Electronics Retail Accounting & Inventory Management",
+      image: "/assets/case-studies/case-2-bajaj.jpg",
+      imageAlt: "Bajaj Electronics Retail Showroom & Inventory Management",
       stats: [
         { value: "40%", label: "MIS Time Saved" },
         { value: "100%", label: "GST ITC Reconciled" },
@@ -352,8 +352,8 @@ export const CASE_STUDIES_DATA = {
         "Summercool Home Appliances — Manufacturing Plant & Cost Accounting",
       description:
         "Directed factory accounts, raw material cost tracking, supply chain accounts payable/receivable cycles, and annual statutory audit readiness.",
-      image: "/assets/case-studies/case-3-finance-saas.png",
-      imageAlt: "Summercool Manufacturing Accounts & Supply Chain AP/AR",
+      image: "/assets/case-studies/case-3-summercool.jpg",
+      imageAlt: "Summercool Home Appliances Manufacturing Accounts & AP/AR",
       stats: [
         { value: "100%", label: "On-Time AP/AR Cycles" },
         { value: "Zero", label: "Reconciliation Delay" },

@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CAPABILITIES_DATA } from "@/assets/Generic-data";
+import { attachCards3DTilt } from "@/utils/gsapCardTilt";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -22,60 +23,85 @@ export default function CapabilitiesSection() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const charElements = headlineRef.current?.querySelectorAll(".scrub-char-cap");
-    const cards = gridRef.current?.querySelectorAll(".bento-card-shell");
+    const wordElements = headlineRef.current?.querySelectorAll(".blur-word");
+    const cards = gridRef.current?.querySelectorAll<HTMLElement>(".bento-card-shell");
 
+    let cleanupTilt: (() => void) | null = null;
     const ctx = gsap.context(() => {
-      // 1. Heading letter-by-letter scrub reveal from grey to solid black
-      if (charElements && charElements.length > 0) {
+      // 1. Heading Split-Word Stagger Entrance (Zero Blur Lag)
+      if (wordElements && wordElements.length > 0) {
         gsap.fromTo(
-          charElements,
+          wordElements,
           {
-            color: "rgba(15, 23, 42, 0.16)",
-            opacity: 0.35,
+            opacity: 0,
+            y: 30,
+            scale: 0.96,
           },
           {
-            color: "#0F172A",
             opacity: 1,
-            stagger: 0.025,
-            ease: "none",
+            y: 0,
+            scale: 1,
+            stagger: 0.06,
+            duration: 0.75,
+            ease: "power3.out",
+            force3D: true,
             scrollTrigger: {
               trigger: headlineRef.current,
-              start: "top 82%",
-              end: "bottom 52%",
-              scrub: 0.8,
+              start: "top 85%",
+              toggleActions: "play none none none",
+              once: true,
             },
           }
         );
       }
 
-      // 2. Bento cards subtle entrance stagger
+      // 2. Bento cards Asymmetrical Magnetic Grid Docking (Silky 60+ FPS, Zero Reflow)
       if (cards && cards.length > 0) {
-        gsap.fromTo(
-          cards,
-          {
-            y: 40,
-            opacity: 0,
-            scale: 0.97,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            stagger: 0.08,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: gridRef.current,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
+        cards.forEach((card, idx) => {
+          const isLeft = idx % 3 === 0;
+          const isRight = idx % 3 === 2;
+          gsap.fromTo(
+            card,
+            {
+              opacity: 0,
+              x: isLeft ? -45 : isRight ? 45 : 0,
+              y: 50,
+              scale: 0.94,
             },
-          }
-        );
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              scale: 1,
+              duration: 0.85,
+              delay: idx * 0.08,
+              ease: "power3.out",
+              force3D: true,
+              scrollTrigger: {
+                trigger: gridRef.current,
+                start: "top 85%",
+                toggleActions: "play none none none",
+                once: true,
+              },
+              onComplete: () => {
+                gsap.set(card, { clearProps: "transform" });
+              },
+            }
+          );
+        });
+
+        // 3. Butter-Smooth 120 FPS 3D Cursor Parallax Tilt on Bento Cards
+        cleanupTilt = attachCards3DTilt(cards, {
+          maxTilt: 8,
+          maxMove: 6,
+          perspective: 1100,
+          scaleOnHover: 1.015,
+        });
       }
     }, sectionRef);
 
     return () => {
+      cleanupTilt?.();
       ctx.revert();
     };
   }, []);
@@ -168,6 +194,7 @@ export default function CapabilitiesSection() {
             lineHeight: 1.15,
             letterSpacing: "-0.035em",
             margin: "0 auto",
+            color: "#0F172A",
             userSelect: "none",
             mb: { xs: 5, sm: 7, md: 9 },
           }}
@@ -175,25 +202,16 @@ export default function CapabilitiesSection() {
           {WORDS.map((word, wordIdx) => (
             <span
               key={wordIdx}
+              className="blur-word"
               style={{
                 display: "inline-block",
                 whiteSpace: "nowrap",
                 marginRight: "0.26em",
+                color: "#0F172A",
+                willChange: "transform, opacity",
               }}
             >
-              {word.split("").map((char, charIdx) => (
-                <span
-                  key={charIdx}
-                  className="scrub-char-cap"
-                  style={{
-                    display: "inline-block",
-                    color: "rgba(15, 23, 42, 0.16)",
-                    willChange: "color, opacity",
-                  }}
-                >
-                  {char}
-                </span>
-              ))}
+              {word}
             </span>
           ))}
         </Typography>
@@ -232,9 +250,9 @@ export default function CapabilitiesSection() {
               flexDirection: "column",
               justifyContent: "space-between",
               boxShadow: "0 6px 24px -4px rgba(15, 23, 42, 0.04)",
-              transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease",
+              willChange: "transform",
               "&:hover": {
-                transform: "translateY(-4px)",
                 boxShadow: "0 18px 40px -10px rgba(15, 23, 42, 0.08)",
               },
             }}
@@ -458,9 +476,9 @@ export default function CapabilitiesSection() {
               flexDirection: "column",
               justifyContent: "space-between",
               boxShadow: "0 6px 24px -4px rgba(15, 23, 42, 0.04)",
-              transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease",
+              willChange: "transform",
               "&:hover": {
-                transform: "translateY(-4px)",
                 boxShadow: "0 18px 40px -10px rgba(15, 23, 42, 0.08)",
               },
             }}
@@ -620,9 +638,9 @@ export default function CapabilitiesSection() {
               flexDirection: "column",
               justifyContent: "space-between",
               boxShadow: "0 6px 24px -4px rgba(15, 23, 42, 0.04)",
-              transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease",
+              willChange: "transform",
               "&:hover": {
-                transform: "translateY(-4px)",
                 boxShadow: "0 18px 40px -10px rgba(15, 23, 42, 0.08)",
               },
             }}
@@ -801,9 +819,9 @@ export default function CapabilitiesSection() {
               flexDirection: "column",
               justifyContent: "space-between",
               boxShadow: "0 6px 24px -4px rgba(15, 23, 42, 0.04)",
-              transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease",
+              willChange: "transform",
               "&:hover": {
-                transform: "translateY(-4px)",
                 boxShadow: "0 18px 40px -10px rgba(15, 23, 42, 0.08)",
               },
             }}
@@ -920,9 +938,9 @@ export default function CapabilitiesSection() {
               flexDirection: "column",
               justifyContent: "space-between",
               boxShadow: "0 6px 24px -4px rgba(15, 23, 42, 0.04)",
-              transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease",
+              willChange: "transform",
               "&:hover": {
-                transform: "translateY(-4px)",
                 boxShadow: "0 18px 40px -10px rgba(15, 23, 42, 0.08)",
               },
             }}
@@ -1080,9 +1098,9 @@ export default function CapabilitiesSection() {
                 "radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.85) 0%, transparent 60%), linear-gradient(135deg, rgba(205, 175, 255, 0.35) 0%, rgba(255, 235, 140, 0.30) 25%, rgba(255, 180, 235, 0.30) 50%, rgba(135, 225, 255, 0.32) 75%, rgba(160, 185, 255, 0.35) 100%), #FFFFFF",
               boxShadow:
                 "0 12px 32px -6px rgba(15, 23, 42, 0.08), 0 0 20px rgba(205, 175, 255, 0.16)",
-              transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease",
+              willChange: "transform",
               "&:hover": {
-                transform: "translateY(-4px)",
                 boxShadow:
                   "0 18px 40px -6px rgba(15, 23, 42, 0.12), 0 0 28px rgba(205, 175, 255, 0.25)",
               },
@@ -1228,9 +1246,9 @@ export default function CapabilitiesSection() {
               flexDirection: "column",
               justifyContent: "space-between",
               boxShadow: "0 6px 24px -4px rgba(15, 23, 42, 0.04)",
-              transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease",
+              willChange: "transform",
               "&:hover": {
-                transform: "translateY(-4px)",
                 boxShadow: "0 18px 40px -10px rgba(15, 23, 42, 0.08)",
               },
             }}

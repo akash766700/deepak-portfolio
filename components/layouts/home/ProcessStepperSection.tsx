@@ -114,7 +114,9 @@ const WORDS = PROCESS_STEPS_DATA.title.split(" ");
 
 export default function ProcessStepperSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const badgeRef = useRef<HTMLDivElement | null>(null);
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
+  const subtitleRef = useRef<HTMLParagraphElement | null>(null);
   const stepperContainerRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const progressBarRef = useRef<HTMLDivElement | null>(null);
@@ -131,37 +133,123 @@ export default function ProcessStepperSection() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const charElements = headlineRef.current?.querySelectorAll(
-      ".scrub-char-process",
-    );
+    const titleWords =
+      headlineRef.current?.querySelectorAll<HTMLElement>(".process-title-word");
     const stepRows =
       sectionRef.current?.querySelectorAll<HTMLElement>(".process-step-row");
 
     const ctx = gsap.context(() => {
-      // 1. Heading letter scrub reveal
-      if (charElements && charElements.length > 0) {
+      // 1. Badge pop
+      if (badgeRef.current) {
         gsap.fromTo(
-          charElements,
+          badgeRef.current,
+          { scale: 0.8, opacity: 0, y: 15 },
           {
-            color: "rgba(15, 23, 42, 0.16)",
-            opacity: 0.35,
-          },
-          {
-            color: "#0F172A",
+            scale: 1,
             opacity: 1,
-            stagger: 0.03,
-            ease: "none",
+            y: 0,
+            duration: 0.6,
+            ease: "back.out(2)",
             scrollTrigger: {
-              trigger: headlineRef.current,
-              start: "top 82%",
-              end: "bottom 52%",
-              scrub: 0.8,
+              trigger: badgeRef.current,
+              start: "top 88%",
+              toggleActions: "play none none reverse",
             },
-          },
+          }
         );
       }
 
-      // 2. Continuous Blue Line Scroll Scrub + Step Card Transformation
+      // 2. Heading: 3D perspective fold-up entrance (Hardware Accelerated)
+      if (titleWords && titleWords.length > 0) {
+        gsap.fromTo(
+          titleWords,
+          {
+            y: "100%",
+            rotateX: -30,
+            opacity: 0,
+          },
+          {
+            y: "0%",
+            rotateX: 0,
+            opacity: 1,
+            duration: 0.75,
+            stagger: 0.06,
+            ease: "power3.out",
+            force3D: true,
+            scrollTrigger: {
+              trigger: headlineRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 3. Subtitle fade up
+      if (subtitleRef.current) {
+        gsap.fromTo(
+          subtitleRef.current,
+          { y: 20, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: "power2.out",
+            force3D: true,
+            scrollTrigger: {
+              trigger: subtitleRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 4. Stepper inner columns entry stagger (Zero row stacking context clash)
+      const leftCols = sectionRef.current?.querySelectorAll<HTMLElement>(".step-col-left");
+      const rightCols = sectionRef.current?.querySelectorAll<HTMLElement>(".step-col-right");
+      if (leftCols && leftCols.length > 0) {
+        gsap.fromTo(
+          leftCols,
+          { opacity: 0, x: -25 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.65,
+            stagger: 0.1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: stepperContainerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+              once: true,
+            },
+          }
+        );
+      }
+      if (rightCols && rightCols.length > 0) {
+        gsap.fromTo(
+          rightCols,
+          { opacity: 0, x: 25 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.65,
+            stagger: 0.1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: stepperContainerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 5. Continuous Aurora Scroll Scrub Line + Step Milestone Activation
       if (
         stepperContainerRef.current &&
         trackRef.current &&
@@ -218,7 +306,7 @@ export default function ProcessStepperSection() {
               trigger: stepperContainerRef.current,
               start: "top 68%",
               end: "bottom 52%",
-              scrub: 2.0, // Silky smooth 2-second momentum smoothing (liquid velvet)
+              scrub: 0.6, // Ultra-responsive instantaneous momentum
               onRefresh: computeThresholds,
               onUpdate: (self) => {
                 const progress = self.progress;
@@ -280,6 +368,7 @@ export default function ProcessStepperSection() {
       >
         {/* Top Pill / Badge: 004 • PROCESS */}
         <Box
+          ref={badgeRef}
           sx={{
             display: "inline-flex",
             alignItems: "center",
@@ -328,7 +417,7 @@ export default function ProcessStepperSection() {
           </Typography>
         </Box>
 
-        {/* Heading: How We Work */}
+        {/* Heading: How We Work - 3D Perspective Fold-Up Entrance */}
         <Typography
           ref={headlineRef}
           component="h2"
@@ -338,8 +427,10 @@ export default function ProcessStepperSection() {
             fontWeight: 600,
             lineHeight: 1.15,
             letterSpacing: "-0.035em",
+            color: "#0F172A",
             margin: "0 auto",
             userSelect: "none",
+            perspective: "1000px",
             mb: 2,
           }}
         >
@@ -348,29 +439,27 @@ export default function ProcessStepperSection() {
               key={wordIdx}
               style={{
                 display: "inline-block",
-                whiteSpace: "nowrap",
+                overflow: "hidden",
                 marginRight: "0.26em",
+                verticalAlign: "bottom",
               }}
             >
-              {word.split("").map((char, charIdx) => (
-                <span
-                  key={charIdx}
-                  className="scrub-char-process"
-                  style={{
-                    display: "inline-block",
-                    color: "rgba(15, 23, 42, 0.16)",
-                    willChange: "color, opacity",
-                  }}
-                >
-                  {char}
-                </span>
-              ))}
+              <span
+                className="process-title-word"
+                style={{
+                  display: "inline-block",
+                  willChange: "transform, opacity",
+                }}
+              >
+                {word}
+              </span>
             </span>
           ))}
         </Typography>
 
         {/* Subtitle matching Framer template */}
         <Typography
+          ref={subtitleRef}
           sx={{
             fontFamily: "var(--font-outfit), sans-serif",
             fontSize: { xs: "0.98rem", sm: "1.1rem" },
@@ -417,7 +506,7 @@ export default function ProcessStepperSection() {
               pointerEvents: "none",
             }}
           >
-            {/* 5-Step Harmonious Cool Palette: Soft Pink ➔ Lilac ➔ Periwinkle ➔ Sky ➔ Mint (Clean Rounded Tip, No Dot) */}
+            {/* 5-Step Harmonious Cool Palette: Soft Pink ➔ Lilac ➔ Periwinkle ➔ Sky ➔ Mint */}
             <Box
               ref={progressBarRef}
               sx={{
@@ -433,7 +522,29 @@ export default function ProcessStepperSection() {
                 borderRadius: "9999px",
                 willChange: "height",
               }}
-            />
+            >
+              {/* Traveling Glowing Laser Node at the line tip */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: -6,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: 14,
+                  height: 14,
+                  borderRadius: "50%",
+                  bgcolor: "#FFFFFF",
+                  boxShadow:
+                    "0 0 10px 3px #38BDF8, 0 0 20px 6px #C084FC, 0 0 35px 10px rgba(45, 212, 191, 0.8)",
+                  pointerEvents: "none",
+                  animation: "pulse 1.8s infinite ease-in-out",
+                  "@keyframes pulse": {
+                    "0%, 100%": { transform: "translateX(-50%) scale(1)", opacity: 1 },
+                    "50%": { transform: "translateX(-50%) scale(1.35)", opacity: 0.85 },
+                  },
+                }}
+              />
+            </Box>
           </Box>
 
           {STEPS.map((step, idx) => {
@@ -481,6 +592,7 @@ export default function ProcessStepperSection() {
                 {/* LEFT COLUMN (Desktop: Icon or Text)                        */}
                 {/* ========================================================== */}
                 <Box
+                  className="step-col-left"
                   sx={{
                     position: "relative",
                     zIndex: 10,
@@ -574,12 +686,13 @@ export default function ProcessStepperSection() {
                 </Box>
 
                 {/* ========================================================== */}
-                {/* CENTER PIN / INTERSECTION (Silky Cross-Fading Timeline Pin) */}
+                {/* CENTER PIN / INTERSECTION (Line passes STRICTLY BEHIND pin) */}
                 {/* ========================================================== */}
                 <Box
+                  className="step-center-pin"
                   sx={{
                     position: "relative",
-                    zIndex: 10, // Level 10: ON TOP of trackRef (zIndex: 2) -> Line passes BEHIND pin button!
+                    zIndex: 25, // Level 25: ON TOP of trackRef (zIndex: 2) -> Line passes BEHIND pin button!
                     display: { xs: "none", md: "flex" },
                     alignItems: "center",
                     justifyContent: "center",
@@ -597,6 +710,18 @@ export default function ProcessStepperSection() {
                       justifyContent: "center",
                     }}
                   >
+                    {/* Solid White Squircle Backing: Blocks 3px track line completely under pin */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        width: 26,
+                        height: 26,
+                        borderRadius: "9px",
+                        bgcolor: "#FFFFFF",
+                        zIndex: 0,
+                      }}
+                    />
+
                     {/* Inactive Pin (Smooth dissolve out) */}
                     <Box
                       sx={{
@@ -609,6 +734,7 @@ export default function ProcessStepperSection() {
                         opacity: isPassed ? 0 : 1,
                         transform: isPassed ? "scale(0.85)" : "scale(1)",
                         transition: "all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)",
+                        zIndex: 1,
                       }}
                     />
 
@@ -629,6 +755,7 @@ export default function ProcessStepperSection() {
                         opacity: isPassed ? 1 : 0,
                         transform: isPassed ? "scale(1)" : "scale(0.85)",
                         transition: "all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)",
+                        zIndex: 2,
                       }}
                     >
                       <Box
@@ -659,6 +786,7 @@ export default function ProcessStepperSection() {
                 {/* RIGHT COLUMN (Desktop: Opposite of Left Column)            */}
                 {/* ========================================================== */}
                 <Box
+                  className="step-col-right"
                   sx={{
                     position: "relative",
                     zIndex: 10,

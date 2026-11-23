@@ -1,17 +1,84 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FAQS_DATA } from "@/assets/Generic-data";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const FAQ_ITEMS = FAQS_DATA.items;
 
 export default function FAQSection() {
   // First item open by default as shown in the design reference
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const headlineRef = useRef<HTMLHeadingElement | null>(null);
+  const accordionListRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const ctx = gsap.context(() => {
+      // 1. Heading Fade & Rise
+      if (headlineRef.current) {
+        gsap.fromTo(
+          headlineRef.current,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headlineRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      // 2. Zipper Alternating Stagger on Accordion Items (Hardware Accelerated)
+      const items = accordionListRef.current?.querySelectorAll(".faq-accordion-item");
+      if (items && items.length > 0) {
+        gsap.fromTo(
+          items,
+          {
+            opacity: 0,
+            x: (i) => (i % 2 === 0 ? -25 : 25),
+            scale: 0.98,
+          },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            stagger: 0.06,
+            duration: 0.75,
+            ease: "power2.out",
+            force3D: true,
+            scrollTrigger: {
+              trigger: accordionListRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+              once: true,
+            },
+            onComplete: () => {
+              gsap.set(items, { clearProps: "transform" });
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const toggleItem = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -21,6 +88,7 @@ export default function FAQSection() {
     <Box
       component="section"
       id="faqs"
+      ref={sectionRef}
       sx={{
         position: "relative",
         zIndex: 1,
@@ -92,6 +160,7 @@ export default function FAQSection() {
 
         {/* Section Heading */}
         <Typography
+          ref={headlineRef}
           variant="h2"
           component="h2"
           sx={{
@@ -110,6 +179,7 @@ export default function FAQSection() {
 
         {/* Accordion List Container */}
         <Box
+          ref={accordionListRef}
           sx={{
             width: "100%",
             maxWidth: "1040px",
@@ -124,6 +194,7 @@ export default function FAQSection() {
             return (
               <Box
                 key={item.number}
+                className="faq-accordion-item"
                 onClick={() => toggleItem(index)}
                 sx={{
                   width: "100%",

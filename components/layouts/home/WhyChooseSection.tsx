@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { WHY_CHOOSE_DATA } from "@/assets/Generic-data";
+import { attachCards3DTilt } from "@/utils/gsapCardTilt";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -22,60 +23,110 @@ export default function WhyChooseSection() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const charElements = headlineRef.current?.querySelectorAll(".scrub-char-why");
-    const cardElements = cardsContainerRef.current?.querySelectorAll(".exact-card-shell");
+    const wordElements = headlineRef.current?.querySelectorAll(".kinetic-word");
+    const cardElements = cardsContainerRef.current?.querySelectorAll<HTMLElement>(".exact-card-shell");
+    const badgeEl = sectionRef.current?.querySelector(".top-pill-badge");
 
+    let cleanupTilt: (() => void) | null = null;
     const ctx = gsap.context(() => {
-      // 1. Heading Letter-by-Letter Scroll Color Reveal from Grey to Black
-      if (charElements && charElements.length > 0) {
+      // 0. Top Badge slide & fade
+      if (badgeEl) {
         gsap.fromTo(
-          charElements,
+          badgeEl,
+          { opacity: 0, y: -20, scale: 0.9 },
           {
-            color: "rgba(15, 23, 42, 0.16)",
-            opacity: 0.35,
-          },
-          {
-            color: "#0F172A",
             opacity: 1,
-            stagger: 0.03,
-            ease: "none",
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: "back.out(1.7)",
             scrollTrigger: {
-              trigger: headlineRef.current,
-              start: "top 82%",
-              end: "bottom 52%",
-              scrub: 0.8,
+              trigger: badgeEl,
+              start: "top 88%",
+              toggleActions: "play none none reverse",
             },
           }
         );
       }
 
-      // 2. Subtle stagger entrance on the 3 cards
-      if (cardElements && cardElements.length > 0) {
+      // 1. Kinetic Masked Word Slide-Up with Skew Snap
+      if (wordElements && wordElements.length > 0) {
         gsap.fromTo(
-          cardElements,
+          wordElements,
           {
-            y: 45,
+            y: "115%",
+            rotateZ: 4,
             opacity: 0,
-            scale: 0.96,
           },
           {
-            y: 0,
+            y: "0%",
+            rotateZ: 0,
             opacity: 1,
-            scale: 1,
-            stagger: 0.15,
-            duration: 0.85,
-            ease: "power2.out",
+            stagger: 0.05,
+            duration: 0.9,
+            ease: "power4.out",
             scrollTrigger: {
-              trigger: cardsContainerRef.current,
+              trigger: headlineRef.current,
               start: "top 85%",
               toggleActions: "play none none reverse",
             },
           }
         );
       }
+
+      // 2. 3D "Card Deck Fan-Out" Entrance (Optimized with force3D & GPU Compositing)
+      if (cardElements && cardElements.length > 0) {
+        cardElements.forEach((card, idx) => {
+          const isLeft = idx === 0;
+          const isRight = idx === 2;
+
+          gsap.fromTo(
+            card,
+            {
+              x: isLeft ? 120 : isRight ? -120 : 0,
+              y: 70,
+              rotateZ: isLeft ? -9 : isRight ? 9 : 0,
+              rotateY: isLeft ? 15 : isRight ? -15 : 0,
+              opacity: 0,
+              scale: 0.88,
+              transformPerspective: 1200,
+            },
+            {
+              x: 0,
+              y: 0,
+              rotateZ: 0,
+              rotateY: 0,
+              opacity: 1,
+              scale: 1,
+              duration: 1.0,
+              delay: idx * 0.1,
+              ease: "back.out(1.4)",
+              force3D: true,
+              scrollTrigger: {
+                trigger: cardsContainerRef.current,
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true,
+              },
+              onComplete: () => {
+                gsap.set(card, { clearProps: "transform" });
+              },
+            }
+          );
+        });
+
+        // 3. Butter-Smooth 120 FPS 3D Cursor Parallax Tilt on all cards
+        cleanupTilt = attachCards3DTilt(cardElements, {
+          maxTilt: 9,
+          maxMove: 8,
+          perspective: 1100,
+          scaleOnHover: 1.02,
+        });
+      }
     }, sectionRef);
 
     return () => {
+      cleanupTilt?.();
       ctx.revert();
     };
   }, []);
@@ -109,6 +160,7 @@ export default function WhyChooseSection() {
       >
         {/* Top Pill / Badge: 002 • VALUE */}
         <Box
+          className="top-pill-badge"
           sx={{
             display: "inline-flex",
             alignItems: "center",
@@ -157,7 +209,7 @@ export default function WhyChooseSection() {
           </Typography>
         </Box>
 
-        {/* Heading: Scroll-driven Letter-by-Letter Reveal from Grey to Solid Black */}
+        {/* Heading: Kinetic Masked Word Slide-Up Reveal */}
         <Typography
           ref={headlineRef}
           component="h2"
@@ -168,6 +220,7 @@ export default function WhyChooseSection() {
             lineHeight: 1.15,
             letterSpacing: "-0.035em",
             margin: "0 auto",
+            color: "#0F172A",
             userSelect: "none",
           }}
         >
@@ -176,23 +229,20 @@ export default function WhyChooseSection() {
               key={wordIdx}
               style={{
                 display: "inline-block",
-                whiteSpace: "nowrap",
+                overflow: "hidden",
+                verticalAlign: "top",
                 marginRight: "0.26em",
               }}
             >
-              {word.split("").map((char, charIdx) => (
-                <span
-                  key={charIdx}
-                  className="scrub-char-why"
-                  style={{
-                    display: "inline-block",
-                    color: "rgba(15, 23, 42, 0.16)",
-                    willChange: "color, opacity",
-                  }}
-                >
-                  {char}
-                </span>
-              ))}
+              <span
+                className="kinetic-word"
+                style={{
+                  display: "inline-block",
+                  willChange: "transform, opacity",
+                }}
+              >
+                {word}
+              </span>
             </span>
           ))}
         </Typography>
@@ -251,11 +301,11 @@ export default function WhyChooseSection() {
                 textAlign: "center",
                 boxShadow:
                   "0 12px 36px -8px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04)",
-                transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                transition: "box-shadow 0.35s ease, border-color 0.35s ease",
+                willChange: "transform",
                 "&:hover": {
-                  transform: "translateY(-6px)",
                   boxShadow:
-                    "0 22px 50px -10px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.06)",
+                    "0 24px 55px -10px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.06)",
                   "& .glossy-3d-sphere": {
                     transform: "scale(1.05)",
                   },
