@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TESTIMONIALS_DATA } from "@/assets/Generic-data";
@@ -130,12 +129,12 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
       sx={{
         width: "100%",
         bgcolor: "#F2F2F2",
-        borderRadius: { xs: "32px", md: "48px" },
-        p: { xs: "28px 24px", md: "40px" },
+        borderRadius: { xs: "28px", md: "40px" },
+        p: { xs: "24px 20px", md: "32px 28px" },
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        gap: { xs: 3, md: 4 },
+        gap: { xs: 2.5, md: 3 },
         border: "1px solid rgba(0, 0, 0, 0.05)",
         boxShadow: "0 4px 20px rgba(0, 0, 0, 0.03)",
         transition: "box-shadow 0.35s ease, border-color 0.35s ease",
@@ -156,15 +155,15 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
           width: "100%",
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
           {/* Avatar */}
           <Box
             component="img"
             src={item.avatar}
             alt={item.name}
             sx={{
-              width: { xs: 64, md: 80 },
-              height: { xs: 64, md: 80 },
+              width: { xs: 54, md: 64 },
+              height: { xs: 54, md: 64 },
               borderRadius: "50%",
               objectFit: "cover",
               bgcolor: "#E2E8F0",
@@ -173,11 +172,11 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
           />
 
           {/* Name & Title */}
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 0.3 }}>
             <Typography
               sx={{
                 fontFamily: "var(--font-outfit), sans-serif",
-                fontSize: { xs: "1.05rem", md: "1.15rem" },
+                fontSize: { xs: "0.98rem", md: "1.08rem" },
                 fontWeight: 600,
                 color: "#1A1A1A",
                 lineHeight: 1.2,
@@ -189,7 +188,7 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
             <Typography
               sx={{
                 fontFamily: "var(--font-outfit), sans-serif",
-                fontSize: { xs: "0.8rem", md: "0.85rem" },
+                fontSize: { xs: "0.76rem", md: "0.82rem" },
                 color: "#64748B",
                 lineHeight: 1.3,
                 letterSpacing: "-0.01em",
@@ -206,7 +205,7 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
           src="/assets/testimonials/quote-mark.png"
           alt="Quote"
           sx={{
-            width: { xs: 20, md: 25 },
+            width: { xs: 18, md: 22 },
             height: "auto",
             opacity: 0.8,
             flexShrink: 0,
@@ -218,7 +217,7 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
       <Typography
         sx={{
           fontFamily: "var(--font-outfit), sans-serif",
-          fontSize: { xs: "0.88rem", md: "0.94rem" },
+          fontSize: { xs: "0.85rem", md: "0.9rem" },
           color: "#475569",
           lineHeight: 1.55,
           letterSpacing: "-0.01em",
@@ -243,15 +242,15 @@ function VideoCard({
       onClick={() => onPlay(item.videoUrl)}
       sx={{
         width: "100%",
-        minHeight: { xs: 360, sm: 420, md: 490 },
-        borderRadius: { xs: "36px", md: "56px" },
+        minHeight: { xs: 320, sm: 380, md: 440 },
+        borderRadius: { xs: "32px", md: "48px" },
         position: "relative",
         overflow: "hidden",
         cursor: "pointer",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        p: { xs: "28px 24px", md: "36px" },
+        p: { xs: "24px 20px", md: "30px" },
         boxShadow: "0 10px 30px rgba(0, 0, 0, 0.12)",
         transition: "box-shadow 0.35s ease, border-color 0.35s ease",
         willChange: "transform",
@@ -304,8 +303,8 @@ function VideoCard({
         sx={{
           position: "relative",
           zIndex: 2,
-          width: { xs: 42, md: 48 },
-          height: { xs: 42, md: 48 },
+          width: { xs: 38, md: 44 },
+          height: { xs: 38, md: 44 },
           borderRadius: "50%",
           bgcolor: "rgba(255, 255, 255, 0.28)",
           backdropFilter: "blur(12px)",
@@ -322,7 +321,7 @@ function VideoCard({
         <Box
           component="svg"
           viewBox="0 0 24 24"
-          sx={{ width: 18, height: 18, fill: "#FFFFFF", ml: 0.35 }}
+          sx={{ width: 16, height: 16, fill: "#FFFFFF", ml: 0.35 }}
         >
           <path d="M8 5v14l11-7z" />
         </Box>
@@ -335,7 +334,7 @@ function VideoCard({
           zIndex: 2,
           display: "flex",
           flexDirection: "column",
-          gap: 1.5,
+          gap: 1.2,
         }}
       >
         {/* White Logoipsum Badge */}
@@ -344,9 +343,9 @@ function VideoCard({
           src="/assets/testimonials/logoipsum-white.png"
           alt="Logoipsum"
           sx={{
-            height: { xs: 20, md: 24 },
+            height: { xs: 18, md: 22 },
             width: "auto",
-            maxWidth: 150,
+            maxWidth: 140,
             objectFit: "contain",
             objectPosition: "left",
             display: "block",
@@ -357,7 +356,7 @@ function VideoCard({
         <Typography
           sx={{
             fontFamily: "var(--font-outfit), sans-serif",
-            fontSize: { xs: "1.25rem", md: "1.5rem" },
+            fontSize: { xs: "1.12rem", md: "1.35rem" },
             fontWeight: 600,
             color: "#FFFFFF",
             lineHeight: 1.22,
@@ -457,7 +456,7 @@ export default function TestimonialsSection() {
       sx={{
         position: "relative",
         zIndex: 1,
-        py: { xs: 6, sm: 8, md: 10 },
+        py: { xs: 8, sm: 11, md: 15 },
         width: "100%",
         display: "flex",
         flexDirection: "column",
@@ -614,7 +613,7 @@ export default function TestimonialsSection() {
         </Box>
       </Container>
 
-      {/* VIEW MODE 1: 3D INFINITE SPIRAL */}
+      {/* VIEW MODE 1: 3D INFINITE SPIRAL (Taller viewport, compact cards, generous gap) */}
       {viewMode === "spiral" && (
         <Box
           sx={{
@@ -631,16 +630,20 @@ export default function TestimonialsSection() {
             speed={0.42}
             direction="up"
             animationMode="all"
-            radius={320}
-            cardWidth={370}
-            cardHeight={260}
-            verticalSpacing={76}
-            perspective={1150}
-            cardsPerTurn={5.5}
-            centerScale={1.16}
-            edgeFade={0.34}
+            radius={400}
+            cardWidth={280}
+            cardHeight={185}
+            verticalSpacing={140}
+            perspective={1200}
+            cardsPerTurn={6.5}
+            centerScale={1.08}
+            edgeFade={0.32}
             edgeBlur={4}
+            cardRadius={24}
             pauseOnHover={true}
+            sx={{
+              minHeight: { xs: 720, sm: 820, md: 940 },
+            }}
             onCardClick={(item) => {
               if (item.kind === "video") {
                 setActiveVideoUrl(item.videoUrl);
@@ -656,7 +659,7 @@ export default function TestimonialsSection() {
                       position: "relative",
                       width: "100%",
                       height: "100%",
-                      p: "22px 24px",
+                      p: { xs: "14px 16px", md: "16px 18px" },
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
@@ -708,9 +711,9 @@ export default function TestimonialsSection() {
                         sx={{
                           display: "inline-flex",
                           alignItems: "center",
-                          gap: 0.8,
-                          px: 1.5,
-                          py: 0.4,
+                          gap: 0.6,
+                          px: 1.2,
+                          py: 0.3,
                           borderRadius: "9999px",
                           bgcolor: "rgba(0, 0, 0, 0.55)",
                           backdropFilter: "blur(8px)",
@@ -720,7 +723,7 @@ export default function TestimonialsSection() {
                         <Typography
                           sx={{
                             fontFamily: "var(--font-outfit), sans-serif",
-                            fontSize: "0.72rem",
+                            fontSize: "0.66rem",
                             fontWeight: 600,
                             color: "#FFFFFF",
                             letterSpacing: "0.02em",
@@ -733,8 +736,8 @@ export default function TestimonialsSection() {
                       {/* Play Circle */}
                       <Box
                         sx={{
-                          width: 38,
-                          height: 38,
+                          width: 32,
+                          height: 32,
                           borderRadius: "50%",
                           bgcolor: "rgba(255, 255, 255, 0.3)",
                           backdropFilter: "blur(10px)",
@@ -749,7 +752,7 @@ export default function TestimonialsSection() {
                         <Box
                           component="svg"
                           viewBox="0 0 24 24"
-                          sx={{ width: 16, height: 16, fill: "#FFFFFF", ml: 0.2 }}
+                          sx={{ width: 14, height: 14, fill: "#FFFFFF", ml: 0.2 }}
                         >
                           <path d="M8 5v14l11-7z" />
                         </Box>
@@ -761,11 +764,15 @@ export default function TestimonialsSection() {
                       <Typography
                         sx={{
                           fontFamily: "var(--font-outfit), sans-serif",
-                          fontSize: "1.08rem",
+                          fontSize: "0.92rem",
                           fontWeight: 600,
                           color: "#FFFFFF",
                           lineHeight: 1.25,
-                          letterSpacing: "-0.02em",
+                          letterSpacing: "-0.015em",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
                           textShadow: "0 2px 10px rgba(0, 0, 0, 0.8)",
                         }}
                       >
@@ -776,17 +783,17 @@ export default function TestimonialsSection() {
                 );
               }
 
-              // Standard Text Review Card (100% theme color #F2F2F2)
+              // Standard Text Review Card (Compact, elegant, pure #F2F2F2 theme)
               return (
                 <Box
                   sx={{
                     width: "100%",
                     height: "100%",
-                    p: { xs: "20px 22px", md: "24px 26px" },
+                    p: { xs: "12px 14px", md: "14px 16px" },
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
-                    gap: 1.5,
+                    gap: 1,
                   }}
                 >
                   {/* Top: Avatar, Name, Role, Quote mark */}
@@ -797,19 +804,19 @@ export default function TestimonialsSection() {
                       justifyContent: "space-between",
                     }}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.8 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
                       <Box
                         component="img"
                         src={item.avatar}
                         alt={item.name}
                         sx={{
-                          width: 48,
-                          height: 48,
+                          width: 38,
+                          height: 38,
                           borderRadius: "50%",
                           objectFit: "cover",
                           bgcolor: "#E2E8F0",
-                          border: "1.5px solid rgba(0, 0, 0, 0.08)",
-                          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                          border: "1px solid rgba(0, 0, 0, 0.08)",
+                          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.06)",
                           flexShrink: 0,
                         }}
                       />
@@ -817,7 +824,7 @@ export default function TestimonialsSection() {
                         <Typography
                           sx={{
                             fontFamily: "var(--font-outfit), sans-serif",
-                            fontSize: "1.02rem",
+                            fontSize: "0.92rem",
                             fontWeight: 600,
                             color: "#1A1A1A",
                             lineHeight: 1.2,
@@ -829,9 +836,9 @@ export default function TestimonialsSection() {
                         <Typography
                           sx={{
                             fontFamily: "var(--font-outfit), sans-serif",
-                            fontSize: "0.74rem",
+                            fontSize: "0.68rem",
                             color: "#64748B",
-                            lineHeight: 1.3,
+                            lineHeight: 1.25,
                             display: "-webkit-box",
                             WebkitLineClamp: 1,
                             WebkitBoxOrient: "vertical",
@@ -849,7 +856,7 @@ export default function TestimonialsSection() {
                       src="/assets/testimonials/quote-mark.png"
                       alt="Quote"
                       sx={{
-                        width: 18,
+                        width: 15,
                         height: "auto",
                         opacity: 0.75,
                         flexShrink: 0,
@@ -862,9 +869,9 @@ export default function TestimonialsSection() {
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 0.4,
+                      gap: 0.3,
                       color: "#F59E0B",
-                      fontSize: "0.85rem",
+                      fontSize: "0.75rem",
                     }}
                   >
                     {"★★★★★"}
@@ -874,12 +881,12 @@ export default function TestimonialsSection() {
                   <Typography
                     sx={{
                       fontFamily: "var(--font-outfit), sans-serif",
-                      fontSize: "0.84rem",
+                      fontSize: "0.76rem",
                       color: "#475569",
-                      lineHeight: 1.5,
+                      lineHeight: 1.45,
                       letterSpacing: "-0.01em",
                       display: "-webkit-box",
-                      WebkitLineClamp: 3,
+                      WebkitLineClamp: 2,
                       WebkitBoxOrient: "vertical",
                       overflow: "hidden",
                     }}
@@ -893,14 +900,14 @@ export default function TestimonialsSection() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      pt: 1,
+                      pt: 0.8,
                       borderTop: "1px solid rgba(0, 0, 0, 0.05)",
                     }}
                   >
                     <Typography
                       sx={{
                         fontFamily: "var(--font-outfit), sans-serif",
-                        fontSize: "0.7rem",
+                        fontSize: "0.66rem",
                         fontWeight: 600,
                         color: "#0F766E",
                       }}
@@ -910,12 +917,12 @@ export default function TestimonialsSection() {
                     <Typography
                       sx={{
                         fontFamily: "var(--font-outfit), sans-serif",
-                        fontSize: "0.72rem",
+                        fontSize: "0.68rem",
                         fontWeight: 600,
                         color: "#2563EB",
                         display: "flex",
                         alignItems: "center",
-                        gap: 0.4,
+                        gap: 0.3,
                       }}
                     >
                       Read full ↗

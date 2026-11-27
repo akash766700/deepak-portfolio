@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Statutory Shield Outline -->
+  <path d="M24 9l13 6v9c0 8-5.5 13.5-13 16-7.5-2.5-13-8-13-16v-9l13-6z" stroke="#0F172A" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Indian Rupee symbol ₹ -->
+  <path d="M19 18h10M19 22h8M19 18v8a4.5 4.5 0 0 0 4.5 4.5h1l4.5 5.5" stroke="#06B6D4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

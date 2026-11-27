@@ -46,21 +46,21 @@ const smoothstep = (min: number, max: number, value: number) => {
 export default function InfiniteSpiral<T = any>({
   items = [],
   renderItem,
-  speed = 0.45,
+  speed = 0.42,
   direction = "up",
   animationMode = "all",
-  radius = 280,
-  cardWidth = 360,
-  cardHeight = 240,
-  verticalSpacing = 72,
-  perspective = 1100,
-  cardsPerTurn = 5.5,
+  radius = 400,
+  cardWidth = 280,
+  cardHeight = 185,
+  verticalSpacing = 140,
+  perspective = 1200,
+  cardsPerTurn = 6.5,
   rotation = 0,
   cardTilt = 0,
-  cardRadius = 36,
-  centerScale = 1.15,
-  edgeFade = 0.35,
-  edgeBlur = 5,
+  cardRadius = 24,
+  centerScale = 1.08,
+  edgeFade = 0.32,
+  edgeBlur = 4,
   pauseOnHover = true,
   onCardClick,
   sx,
@@ -139,19 +139,19 @@ export default function InfiniteSpiral<T = any>({
       // Responsive fitting for mobile vs desktop
       const isMobile = width < 600;
       const effectiveCardWidth = isMobile
-        ? Math.min(cardWidth, width * 0.86)
+        ? Math.min(cardWidth, width * 0.76)
         : cardWidth;
       const effectiveCardHeight = isMobile
-        ? Math.min(cardHeight, height * 0.44)
+        ? Math.min(cardHeight, height * 0.28)
         : cardHeight;
 
       const fit = Math.min(
         1,
-        width / (effectiveCardWidth * 2.5),
-        height / (effectiveCardHeight * 2.2)
+        width / (effectiveCardWidth * 3.0),
+        height / (effectiveCardHeight * 2.8)
       );
       const responsiveRadius =
-        Math.min(radius, Math.max(80, width * 0.38)) * (isMobile ? 0.85 : fit);
+        Math.min(radius, Math.max(80, width * 0.44)) * (isMobile ? 0.82 : Math.max(fit, 0.9));
       const fadeStart = clamp(1 - edgeFade, 0, 0.98);
       const turnSize = Math.max(cardsPerTurn, 1);
 
@@ -161,7 +161,7 @@ export default function InfiniteSpiral<T = any>({
         const edge = Math.min(Math.abs(offset) / Math.max(half, 1), 1);
         const opacity = 1 - smoothstep(fadeStart, 1, edge);
         const focus = 1 - Math.min(Math.abs(offset) / Math.max(turnSize * 0.65, 1), 1);
-        const scale = (1 + (centerScale - 1) * focus) * (isMobile ? 1 : fit);
+        const scale = (1 + (centerScale - 1) * focus) * (isMobile ? 0.92 : 1);
         const angle = offset * (360 / turnSize) + rotation;
         const angleRadians = (angle * Math.PI) / 180;
         const x = Math.sin(angleRadians) * responsiveRadius;
@@ -169,15 +169,18 @@ export default function InfiniteSpiral<T = any>({
         const depthScale = clamp(
           perspective / Math.max(perspective - z, 1),
           0.72,
-          1.4
+          1.35
         );
         const visualScale = scale * depthScale;
         const depth = (z / Math.max(responsiveRadius, 1) + 1) / 2;
         const blur = edgeBlur * smoothstep(0.35, 1, edge);
 
+        // Keep generous spacing between items without aggressive compression
+        const effectiveVerticalSpacing = isMobile ? verticalSpacing * 0.85 : verticalSpacing;
+
         card.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(
           2
-        )}px, ${(offset * verticalSpacing * (isMobile ? 0.9 : fit)).toFixed(
+        )}px, ${(offset * effectiveVerticalSpacing).toFixed(
           2
         )}px, 0) rotateZ(${cardTilt}deg) scale(${visualScale.toFixed(3)})`;
         card.style.opacity = opacity.toFixed(3);
@@ -270,7 +273,7 @@ export default function InfiniteSpiral<T = any>({
         position: "relative",
         width: "100%",
         height: "100%",
-        minHeight: { xs: 540, sm: 600, md: 680 },
+        minHeight: { xs: 700, sm: 800, md: 920 },
         overflow: "hidden",
         isolation: "isolate",
         perspective: `${perspective}px`,
@@ -313,13 +316,13 @@ export default function InfiniteSpiral<T = any>({
               willChange: "transform, opacity, filter",
               bgcolor: "#F2F2F2",
               border: "1px solid rgba(0, 0, 0, 0.06)",
-              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.07)",
+              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.06)",
               overflow: "hidden",
               textDecoration: "none",
               color: "inherit",
               transition: "box-shadow 0.3s ease, border-color 0.3s ease",
               "&:hover": {
-                boxShadow: "0 18px 45px rgba(0, 0, 0, 0.12)",
+                boxShadow: "0 16px 38px rgba(0, 0, 0, 0.12)",
                 borderColor: "rgba(0, 0, 0, 0.12)",
               },
             }}

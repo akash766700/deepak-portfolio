@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <rect width="48" height="48" rx="10" fill="#1A365D"/>
+  <path d="M13 16h22v5.5h-8v16.5h-6V21.5h-8z" fill="#ECC94B"/>
+  <text x="36" y="38" fill="#CBD5E1" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="13" text-anchor="end">9</text>
+</svg>

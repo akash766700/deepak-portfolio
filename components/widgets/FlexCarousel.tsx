@@ -29,6 +29,8 @@ interface PresetValues {
   dispersion: number;
   liquid: number;
   followCursor: boolean;
+  slope?: number;
+  cardTilt?: number;
 }
 
 export interface FlexCarouselProps extends Partial<PresetValues> {
@@ -174,7 +176,9 @@ const BEND_PRESETS: Record<BendPreset, PresetValues> = {
     curl: 'twist',
     dispersion: 0.45,
     liquid: 0,
-    followCursor: false
+    followCursor: false,
+    slope: 0,
+    cardTilt: 0
   },
   ribbon: {
     lensWidth: 0.8,
@@ -186,7 +190,9 @@ const BEND_PRESETS: Record<BendPreset, PresetValues> = {
     curl: 'twist',
     dispersion: 0.4,
     liquid: 0,
-    followCursor: false
+    followCursor: false,
+    slope: 0,
+    cardTilt: 0
   },
   vortex: {
     lensWidth: 0.7,
@@ -198,7 +204,9 @@ const BEND_PRESETS: Record<BendPreset, PresetValues> = {
     curl: 'twist',
     dispersion: 0.5,
     liquid: 0,
-    followCursor: false
+    followCursor: false,
+    slope: 0,
+    cardTilt: 0
   },
   arch: {
     lensWidth: 0.8,
@@ -210,7 +218,9 @@ const BEND_PRESETS: Record<BendPreset, PresetValues> = {
     curl: 'rise',
     dispersion: 0.4,
     liquid: 0,
-    followCursor: false
+    followCursor: false,
+    slope: 0,
+    cardTilt: 0
   }
 };
 
@@ -233,12 +243,16 @@ in vec3 position;
 in vec2 uv;
 uniform vec4 uRect;
 uniform vec2 uResolution;
+uniform float uCardAngle;
 out vec2 vUv;
 out vec2 vLocal;
 void main() {
   vUv = uv;
   vLocal = vec2(position.x, -position.y) * uRect.zw;
-  vec2 px = uRect.xy + vLocal;
+  float c = cos(uCardAngle);
+  float s = sin(uCardAngle);
+  vec2 rotLocal = vec2(c * vLocal.x - s * vLocal.y, s * vLocal.x + c * vLocal.y);
+  vec2 px = uRect.xy + rotLocal;
   gl_Position = vec4(px.x / uResolution.x * 2.0 - 1.0, 1.0 - px.y / uResolution.y * 2.0, 0.0, 1.0);
 }
 `;
@@ -395,6 +409,8 @@ const FlexCarousel = ({
   dispersion,
   liquid,
   followCursor,
+  slope,
+  cardTilt,
   squeeze = 0.2,
   focusOnClick = true,
   autoplay = false,
@@ -441,6 +457,8 @@ const FlexCarousel = ({
       dispersion: pick(dispersion, 'dispersion'),
       liquid: pick(liquid, 'liquid'),
       followCursor: pick(followCursor, 'followCursor'),
+      slope: slope !== undefined ? slope : (base.slope || 0),
+      cardTilt: cardTilt !== undefined ? cardTilt : (base.cardTilt || 0),
       squeeze,
       focusOnClick,
       autoplay,
@@ -495,6 +513,7 @@ const FlexCarousel = ({
         uReady: { value: 0 },
         uShift: { value: 0 },
         uDpr: { value: 1 },
+        uCardAngle: { value: 0 },
         uPlaceholder: { value: [0.5, 0.5, 0.5] }
       }
     });
@@ -1016,9 +1035,14 @@ const FlexCarousel = ({
         dirty = false;
         instances = [];
         const dpr = renderer.dpr;
+        const slope = s.slope || 0;
+        const cardAngleRad = s.cardTilt !== undefined && s.cardTilt !== 0
+          ? (s.cardTilt * Math.PI) / 180
+          : (slope !== 0 ? -Math.atan(slope) : 0);
         cardProgram.uniforms.uResolution.value = [width, height];
         cardProgram.uniforms.uDpr.value = dpr;
         cardProgram.uniforms.uRadius.value = s.radius;
+        cardProgram.uniforms.uCardAngle.value = cardAngleRad;
         const shrink = 1 - clamp01(s.squeeze) * energy;
         const draws: Draw[] = [];
         for (let i = 0; i < n; i++) {
@@ -1026,9 +1050,10 @@ const FlexCarousel = ({
           const baseRel = wrap(m.centers[i] - pos, m.loop);
           for (let k = -3; k <= 3; k++) {
             const rel = baseRel + k * m.loop;
-            if (Math.abs(rel) - w / 2 > width + 40) continue;
+            if (Math.abs(rel) - w / 2 > width + 160) continue;
             const fx = effects.card ? effects.card(rel) : null;
             let x = homeX + rel + (fx ? fx.x : 0);
+            let y = homeY - rel * slope + (fx ? fx.y : 0);
             let scale = shrink * (fx ? fx.scale : 1);
             let alpha = fx ? fx.alpha : 1;
             if (focusAmount > 0) {
@@ -1042,8 +1067,8 @@ const FlexCarousel = ({
               }
             }
             const cw = w * scale;
-            if (alpha <= 0.001 || x + cw / 2 < -40 || x - cw / 2 > width + 40) continue;
-            draws.push({ i, rel, x, y: homeY + (fx ? fx.y : 0), cw, ch: cardH * scale, alpha });
+            if (alpha <= 0.001 || x + cw / 2 < -100 || x - cw / 2 > width + 100) continue;
+            draws.push({ i, rel, x, y, cw, ch: cardH * scale, alpha });
           }
         }
         draws.sort((a, b) => Math.abs(b.rel) - Math.abs(a.rel));
@@ -1175,11 +1200,16 @@ const FlexCarousel = ({
           }
         }
         if (pointer.dragging) {
-          pos = pointer.startPos - (x - pointer.startX);
+          const s = settingsRef.current;
+          const slope = s?.slope || 0;
+          const dist = slope !== 0
+            ? ((x - pointer.startX) - (y - pointer.startY) * slope) / Math.sqrt(1 + slope * slope)
+            : (x - pointer.startX);
+          pos = pointer.startPos - dist;
           goal = pos;
           vel = 0;
           const now = performance.now();
-          pointer.samples.push({ x, t: now });
+          pointer.samples.push({ x: dist, t: now });
           while (pointer.samples.length > 2 && now - pointer.samples[0].t > 100) pointer.samples.shift();
         }
       }

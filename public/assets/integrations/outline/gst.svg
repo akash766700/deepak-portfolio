@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Stylized G outline monogram -->
+  <path d="M33 19a11 11 0 1 0 3 8h-9" stroke="#3B82F6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Tricolor Saffron & Green accents -->
+  <line x1="28" y1="12" x2="36" y2="12" stroke="#FF9933" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="28" y1="36" x2="36" y2="36" stroke="#138808" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Center hub dot -->
+  <circle cx="27" cy="27" r="2.2" fill="#3B82F6"/>
+</svg>

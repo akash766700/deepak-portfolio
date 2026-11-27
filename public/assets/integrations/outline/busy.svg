@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Clean outline B monogram in Crimson -->
+  <path d="M16 13h8.5a4.5 4.5 0 0 1 4.5 4.5c0 2-1.2 3.8-3 4.3 2.4.6 4 2.6 4 5.2a5 5 0 0 1-5 5H16V13z" stroke="#EF4444" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="16" y1="22" x2="25" y2="22" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
+  <!-- Inventory box indicator dots -->
+  <circle cx="34" cy="14" r="1.8" fill="#EF4444"/>
+  <circle cx="34" cy="20" r="1.8" fill="#EF4444"/>
+</svg>

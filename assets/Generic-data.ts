@@ -368,70 +368,70 @@ export const CASE_STUDIES_DATA = {
 // ============================================================================
 export const INTEGRATIONS_DATA = {
   badgeNumber: "006",
-  badgeLabel: "INTEGRATIONS",
+  badgeLabel: "FINANCIAL ECOSYSTEM",
   title: "Financial & Accounting Ecosystem",
   subtitle:
-    "Seamlessly connecting standard Indian accounting software, statutory tax portals, and enterprise ERP architectures.",
+    "Seamlessly integrating industry-standard accounting software, statutory tax portals, and enterprise ERP systems into one unified, audit-ready financial architecture.",
   items: [
     {
       id: "tally-prime",
       name: "Tally Prime",
       category: "ERP Accounting",
-      icon: "/assets/integrations/custom-apis.png",
+      icon: "/assets/integrations/tally-prime.svg",
     },
     {
       id: "tally-erp9",
       name: "Tally ERP 9",
       category: "Ledgers & Vouchers",
-      icon: "/assets/integrations/cloud-ai.png",
+      icon: "/assets/integrations/tally-erp9.svg",
     },
     {
       id: "excel-macros",
       name: "Advanced Excel",
       category: "VLOOKUP & Macros",
-      icon: "/assets/integrations/make.png",
+      icon: "/assets/integrations/excel.svg",
     },
     {
       id: "gst-portal",
       name: "GST Portal",
       category: "GSTR-1, 3B & 2B",
-      icon: "/assets/integrations/openai.png",
+      icon: "/assets/integrations/gst.svg",
     },
     {
       id: "income-tax",
       name: "Income Tax & TRACES",
       category: "TDS / TCS / E-Filing",
-      icon: "/assets/integrations/salesforce.png",
+      icon: "/assets/integrations/income-tax.svg",
     },
     {
       id: "busy-acc",
       name: "Busy Accounting",
       category: "Billing & Stock",
-      icon: "/assets/integrations/hubspot.png",
+      icon: "/assets/integrations/busy.svg",
     },
     {
       id: "zoho-books",
       name: "Zoho Books",
       category: "Cloud Invoicing",
-      icon: "/assets/integrations/zoho.png",
+      icon: "/assets/integrations/zoho-books.svg",
     },
     {
       id: "sap-erp",
       name: "SAP ERP",
       category: "Cost Centers & AP/AR",
-      icon: "/assets/integrations/activecampaign.png",
+      icon: "/assets/integrations/sap.svg",
     },
     {
       id: "power-bi",
       name: "Power BI & MIS",
       category: "Financial Dashboards",
-      icon: "/assets/integrations/mailchimp.png",
+      icon: "/assets/integrations/power-bi.svg",
     },
     {
       id: "sql-automation",
       name: "SQL & IT Scripts",
       category: "Automated Pipelines",
-      icon: "/assets/integrations/zapier.png",
+      icon: "/assets/integrations/sql.svg",
     },
   ] as IntegrationItem[],
 };

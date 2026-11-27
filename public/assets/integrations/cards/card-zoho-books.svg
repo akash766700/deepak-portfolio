@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="560" height="350" viewBox="0 0 560 350" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Card Surface Gradient -->
+    <linearGradient id="cardBg" x1="0" y1="0" x2="560" y2="350" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="60%" stop-color="#FBFBFC" />
+      <stop offset="100%" stop-color="#F4F5F7" />
+    </linearGradient>
+
+    <!-- Ambient Brand Glow in Corner -->
+    <radialGradient id="brandGlow" cx="500" cy="50" r="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0.14" />
+      <stop offset="50%" stop-color="#0284C7" stop-opacity="0.04" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Tag Background Pill -->
+    <linearGradient id="tagBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0284C7" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#2563EB" stop-opacity="0.12" />
+    </linearGradient>
+
+    <!-- Card Soft Inner Stroke -->
+    <linearGradient id="cardBorder" x1="0" y1="0" x2="560" y2="350" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.9)" />
+      <stop offset="50%" stop-color="rgba(0, 0, 0, 0.06)" />
+      <stop offset="100%" stop-color="rgba(0, 0, 0, 0.09)" />
+    </linearGradient>
+  </defs>
+
+  <!-- Card Background -->
+  <rect x="2" y="2" width="556" height="346" rx="26" fill="url(#cardBg)" />
+  <rect x="2" y="2" width="556" height="346" rx="26" fill="url(#brandGlow)" />
+  <rect x="2" y="2" width="556" height="346" rx="26" stroke="url(#cardBorder)" stroke-width="2" />
+
+  <!-- Top Decorative Top Light Bar -->
+  <path d="M 28 4 L 532 4" stroke="rgba(255, 255, 255, 0.8)" stroke-width="2" stroke-linecap="round" />
+
+  <!-- TOP HEADER -->
+  <g transform="translate(36, 34)">
+    <!-- Icon Container -->
+    <g>
+      
+      <rect width="52" height="52" rx="14" fill="#0284C7"/>
+      <rect x="14" y="14" width="10.5" height="10.5" rx="2.5" fill="#EF4444"/>
+      <rect x="27.5" y="14" width="10.5" height="10.5" rx="2.5" fill="#10B981"/>
+      <rect x="14" y="27.5" width="10.5" height="10.5" rx="2.5" fill="#F59E0B"/>
+      <rect x="27.5" y="27.5" width="10.5" height="10.5" rx="2.5" fill="#3B82F6"/>
+    
+    </g>
+
+    <!-- Category Tag Pill (Top Right) -->
+    <g transform="translate(488, 10)">
+      <!-- Right aligned: transform anchor -->
+      <rect x="-170" y="0" width="170" height="30" rx="15" fill="url(#tagBg)" stroke="#0284C7" stroke-opacity="0.18" stroke-width="1"/>
+      <circle cx="-154" cy="15" r="3.5" fill="#2563EB"/>
+      <text x="-142" y="19.5" font-family="'Outfit', -apple-system, sans-serif" font-size="11" font-weight="700" fill="#0284C7" letter-spacing="0.8">CLOUD ERP</text>
+    </g>
+  </g>
+
+  <!-- TITLE & SUBTITLE -->
+  <g transform="translate(36, 126)">
+    <!-- Software Title -->
+    <text x="0" y="22" font-family="'Outfit', -apple-system, sans-serif" font-size="25" font-weight="700" fill="#0F172A" letter-spacing="-0.5">Zoho Books Cloud</text>
+    
+    <!-- Subtitle / Capability -->
+    <text x="0" y="52" font-family="'Outfit', -apple-system, sans-serif" font-size="14.5" font-weight="500" fill="#64748B" letter-spacing="-0.1">
+      Automated Recurring Invoices, Client Portals & Multi-Bank Feeds
+    </text>
+  </g>
+
+  <!-- DIVIDER LINE -->
+  <line x1="36" y1="210" x2="524" y2="210" stroke="#E2E8F0" stroke-width="1.2" stroke-dasharray="2 3" />
+
+  <!-- CHIP PILLS (Capabilities) -->
+  <g transform="translate(36, 230)">
+    <!-- Chip 1 -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="151" height="32" rx="16" fill="#F1F5F9" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+      <text x="75.5" y="20.5" font-family="'Outfit', -apple-system, sans-serif" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Live Bank Feeds</text>
+    </g>
+
+    <!-- Chip 2 -->
+    <g transform="translate(161, 0)">
+      <rect x="0" y="0" width="167.39999999999998" height="32" rx="16" fill="#F1F5F9" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+      <text x="83.69999999999999" y="20.5" font-family="'Outfit', -apple-system, sans-serif" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Recurring Billing</text>
+    </g>
+
+    <!-- Chip 3 -->
+    <g transform="translate(338.4, 0)">
+      <rect x="0" y="0" width="134.6" height="32" rx="16" fill="#F1F5F9" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+      <text x="67.3" y="20.5" font-family="'Outfit', -apple-system, sans-serif" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Client Portal</text>
+    </g>
+  </g>
+
+  <!-- FOOTER STATUS -->
+  <g transform="translate(36, 298)">
+    <!-- Active Green Status Dot -->
+    <circle cx="5" cy="5" r="4.5" fill="#10B981" />
+    <circle cx="5" cy="5" r="7.5" fill="#10B981" fill-opacity="0.25" />
+    <text x="22" y="9" font-family="'Outfit', -apple-system, sans-serif" font-size="12.5" font-weight="600" fill="#64748B">Cloud Architecture • 24/7 Sync</text>
+
+    <!-- Right DG Monogram Badge -->
+    <g transform="translate(488, 2)">
+      <text x="0" y="8" font-family="'Outfit', -apple-system, sans-serif" font-size="11.5" font-weight="700" fill="#94A3B8" letter-spacing="1.2" text-anchor="end">DG STACK</text>
+    </g>
+  </g>
+</svg>
